@@ -1,0 +1,47 @@
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfile = record {name: text;};
+type Time = int;
+type FileReference = 
+ record {
+   hash: text;
+   path: text;
+ };
+service : {
+  addProject: (id: text, content: text) -> ();
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  deleteProject: (id: text) -> ();
+  dropFileReference: (path: text) -> ();
+  getCallerUserProfile: () -> (opt UserProfile) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getFileReference: (path: text) -> (FileReference) query;
+  getProjectRevisions: () -> (opt vec record {
+                                        text;
+                                        text;
+                                      }) query;
+  getProjectTimestamps: () -> (opt Time) query;
+  getProjects: () -> (vec record {
+                            text;
+                            text;
+                          }) query;
+  getStats: () -> (vec record {
+                         text;
+                         text;
+                       }) query;
+  getUserProfile: (user: principal) -> (opt UserProfile) query;
+  initializeAccessControl: () -> ();
+  isCallerAdmin: () -> (bool) query;
+  listFileReferences: () -> (vec FileReference) query;
+  redo: () -> ();
+  registerFileReference: (path: text, hash: text) -> ();
+  reorderProjects: (newOrder: vec text) -> ();
+  save: () -> ();
+  saveCallerUserProfile: (profile: UserProfile) -> ();
+  undo: () -> ();
+  updateProject: (id: text, content: text) -> ();
+  updateStat: (key: text, value: text) -> ();
+}

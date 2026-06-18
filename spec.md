@@ -1,0 +1,1130 @@
+# Terry Brutus's Portfolio
+
+## Overview
+A portfolio website showcasing the work and profile of Terry Brutus, a learning experience designer, with smooth scroll-triggered animations, interactive constellation background effect, and a clean, modern design. Features an owner-only WYSIWYG editor mode for direct in-place content management with comprehensive revision history management and persistent data storage. All content changes are immediately synchronized with the backend and visible to all visitors globally.
+
+## Critical Page Loading and Rendering Requirements
+
+### Mandatory Content Display
+- **Guaranteed Page Loading**: Ensure the portfolio page always loads completely with all content sections visible, preventing blank pages or loading failures under all circumstances
+- **Critical Content Rendering**: All portfolio sections (hero, about, projects, contact) must render correctly on page load with proper error boundaries and fallback mechanisms
+- **Complete Data Loading**: Guarantee that all saved content, projects, images, and text elements load and display properly on initial page load without missing or hidden content
+- **Robust Error Handling**: Implement comprehensive error handling for all data fetching operations to prevent blank page issues and ensure content always displays
+- **Loading State Management**: Provide proper loading indicators and graceful error messages when content is loading or fails to load, preventing blank page experiences
+- **Content Initialization Verification**: Ensure proper initialization of all content sections and components on page load with verification mechanisms
+- **Data Fetching Reliability**: Implement retry mechanisms and robust error recovery for all API calls and data loading operations
+- **Frontend Stability**: Ensure frontend components render reliably without crashes or failures that could cause blank pages
+- **Component Error Boundaries**: Implement React error boundaries around all major components to catch and handle rendering errors gracefully
+- **Fallback Content Mechanisms**: Provide fallback content or default states when primary content fails to load instead of showing blank pages
+
+### Backend Data Serving Reliability
+- **Critical API Reliability**: Ensure all backend APIs consistently return data without failures that could cause blank pages or content loading issues
+- **Data Serving Verification**: Implement verification mechanisms to confirm all stored content is properly retrieved and served to the frontend
+- **Backend Error Recovery**: Implement comprehensive error handling and recovery mechanisms in the backend to prevent data serving failures
+- **API Response Consistency**: Ensure backend APIs always return properly formatted responses even when data is empty or missing
+- **Data Integrity Assurance**: Maintain data integrity and ensure no content becomes inaccessible due to backend issues
+- **Robust Data Retrieval**: Implement robust data retrieval mechanisms that handle edge cases and prevent API failures
+- **Backend Stability**: Ensure backend operations are stable and don't cause failures that could result in blank pages
+- **Data Consistency Checks**: Implement data consistency checks to ensure all content is properly stored and retrievable
+
+### Content Loading Verification
+- **Complete Section Loading**: Verify that all portfolio sections (hero with profile image, about with lists/tags, projects grid, contact information) load and display correctly
+- **Project Grid Loading**: Ensure the projects section loads with proper grid layout and all saved projects display correctly
+- **Profile Image Loading**: Verify the static profile image from the specified URL loads and displays properly in the hero section
+- **List and Tag Loading**: Ensure all bullet lists and tag groups in about and contact sections load and display with proper formatting
+- **Contact Information Loading**: Verify contact information displays correctly with proper formatting and clickable links
+- **Media Loading Verification**: Ensure all uploaded images and media files load correctly without causing rendering issues
+- **Navigation Loading**: Verify navigation bar loads with proper GIF logo and all navigation elements function correctly
+- **Background Effect Loading**: Ensure constellation background effect loads and functions without interfering with content display
+
+## Core Features
+
+### Custom Domain Configuration
+- **Domain Configuration Files**: Include `.well-known/ic-domains` file in the frontend `public/.well-known/` directory containing `terrylxd.com`
+- **Asset Configuration**: Include `ic-assets.json` file in the frontend root directory with proper configuration `[ { "match": ".well-known", "ignore": false } ]` to serve the `.well-known` directory
+- **Domain File Structure**: Ensure `.well-known/ic-domains` file has no file extension and contains only the domain name
+- **Asset Serving Configuration**: Configure asset serving to include the `.well-known` directory and its contents
+- **Build Output Inclusion**: Ensure the `public/.well-known/ic-domains` file is included in the frontend build output and accessible at the correct path for custom domain registration
+- **Proper Asset Configuration**: Verify that `ic-assets.json` is present in the frontend root directory and properly configured to serve the `.well-known` directory
+- **Runtime Asset Accessibility**: Ensure the static asset file `public/.well-known/ic-domains` is present in the final build/output directory so it is accessible at `/.well-known/ic-domains` at runtime
+- **Build Output Verification**: After building, confirm the presence and location of `public/.well-known/ic-domains` in the final build/output folder tree with full paths for all public assets
+- **Correct Deployment Location**: Ensure `public/.well-known/ic-domains` is deployed at exactly `/.well-known/ic-domains` in the canister for proper custom domain functionality
+- **Asset Configuration Verification**: Confirm that `ic-assets.json` is included and configured to expose the `.well-known` directory as a public asset
+
+### Seamless Data Migration System
+- **Persistent Backend Storage**: All content edits (text, images, projects, lists, tags, contact information, revision history) are written directly to the backend immediately as they are made, ensuring complete data persistence
+- **Real-Time Backend Synchronization**: Every edit operation immediately writes to the backend storage, eliminating any temporary or draft-only storage that could be lost during deployments
+- **Deployment-Safe Data Persistence**: All user content and edits are stored in the backend's persistent storage system that survives canister upgrades and deployments without data loss
+- **Automatic Data Migration**: Backend data migration system automatically preserves all existing content, edits, and revision history when deploying new versions of the application
+- **Zero Data Loss Guarantee**: Implement robust data migration mechanisms that ensure no content, edits, or revision history is lost between deployments or version updates
+- **Backend-First Content Management**: All content changes are immediately written to backend persistent storage before being reflected in the frontend, ensuring data survival across deployments
+- **Persistent Edit History**: All revision history and undo/redo stack data is stored in the backend's persistent storage and preserved across deployments
+- **Continuous Data Availability**: All content remains available and accessible to all visitors throughout deployment processes without interruption
+- **Migration Verification**: Implement verification mechanisms to confirm successful data migration and content preservation during deployments
+- **Rollback Protection**: Ensure data migration system can handle rollbacks and version changes without losing user content or edits
+
+### Interactive Constellation Background
+- **Dynamic Star Generation**: Generate 50-80 stars at random positions across the viewport with varying sizes and brightness levels
+- **Star Animation System**: Implement glowing, pulsing animation effects for all stars with smooth transitions and varying pulse rates
+- **Cursor-Based Line Drawing**: Draw smooth, anti-aliased lines connecting stars within 150px of the cursor or touch position
+- **Distance-Based Line Opacity**: Line opacity fades based on distance from cursor, creating dynamic visual depth
+- **Star Brightness Enhancement**: Brighten connected stars when they are linked by constellation lines
+- **Multi-Device Interaction**: Support both mouse cursor tracking on desktop and touch position tracking on mobile devices
+- **Dark Space Background**: Use dark space-themed background for high contrast and professional appearance
+- **Dynamic Constellation Patterns**: Create evolving constellation patterns that change as the cursor moves through different areas
+- **WCAG Accessibility Compliance**: Maintain high text contrast and WCAG accessibility standards with all UI elements remaining fully readable
+- **Performance Optimized Rendering**: Use efficient rendering techniques to maintain smooth 60fps animation without impacting page performance
+- **Responsive Constellation**: Ensure constellation effect adapts to all screen sizes and orientations while maintaining visual quality
+- **Non-Intrusive Design**: Constellation effect enhances the design without interfering with content readability or navigation functionality
+- **Smooth Animation Transitions**: Implement smooth transitions for star connections and disconnections as cursor moves
+- **Touch Event Support**: Full touch event handling for mobile devices with finger position tracking
+- **Canvas-Based Rendering**: Use HTML5 Canvas or WebGL for efficient star and line rendering
+- **Star Positioning Algorithm**: Implement algorithm for natural-looking star distribution across the viewport
+- **Line Connection Logic**: Efficient proximity detection and line drawing between stars and cursor position
+- **Visual Depth Effects**: Create visual depth through varying star sizes, brightness, and connection line weights
+
+### Navigation
+- **Navigation Bar**: Features a GIF logo from "https://i.imgur.com/DHmkhf9.gif" in the top left corner instead of text
+- Logo image styled to be approximately 3 times larger than standard navigation sizing to serve as a prominent branding element
+- Logo maintains professional appearance while being visually prominent
+- **Navigation Layout**: Navigation bar positioned to not overlap or cover any content below it, ensuring proper spacing and layout
+- **Fixed Navigation Bar**: Navigation bar remains fixed at the top of the page with blurred background styling
+- **Smart Scroll Behavior**: When "View My Work" or project navigation buttons are clicked, the page scrolls to position section headers just below the fixed navigation bar, ensuring headers are fully visible and not hidden behind the navigation
+- **Scroll Offset Calculation**: Scroll-to-section functionality accounts for the navigation bar height to provide proper positioning
+- **Scroll Offset Implementation**: Apply appropriate scroll offset to prevent section headers from being hidden behind the fixed navigation bar
+- **Projects Navigation Button**: Include a "Projects" button in the navigation bar without a dropdown arrow that appears as a standard button and navigates directly to the Projects section on the main portfolio page
+
+### Content Sections
+- **Hero Section**: Introduction with designer name "Terry Brutus | Learning Experience Designer" and tagline, featuring static headshot image from "https://i.imgur.com/4NAe5Nx.png" displayed as a larger circular avatar with proper cropping to ensure the image is fully contained within the circular border and adequate spacing to prevent the name "Terry Brutus" from being cut off beneath the image
+- **Enhanced Profile Image Display**: Increase the size of the profile picture on the landing page and adjust spacing to ensure the name "Terry Brutus" is never cut off or hidden beneath the image
+- **Static Profile Image**: Circular avatar container that displays the static profile image from "https://i.imgur.com/4NAe5Nx.png", visible to all visitors and never editable or replaceable
+- **Non-Editable Profile Image**: Profile image is always the static image from the specified URL and cannot be edited, uploaded, or replaced by any user including the authenticated owner
+- **About Section**: Professional background and expertise description for Terry Brutus with fully editable bullet lists and tag groups
+- **Projects Section**: Section with title "Featured Projects" and subtitle "A showcase of learning experiences designed to engage, educate, and inspire" featuring a responsive grid of project cards with centered group layout
+- **Traditional Project Card Design**: Project cards use the traditional design as shown in the reference images, filling the entire card area with proper layout and styling
+- **Full Card Coverage**: Project cards fill the complete card area with proper image display and content layout matching the reference design
+- **Functional Project Card Hover Overlays**: Project cards feature fully functional hover overlays that display the project summary text when hovered over or tapped, providing quick preview of project content with proper animation and text display
+- **Working Hover Animation**: Hover overlays appear smoothly on mouseover/tap with correct animation timing and visual effects
+- **Clickable Project Cards**: Each project card is clickable and reliably navigates to its own dedicated project page for detailed viewing
+- **Project Card Navigation**: Project cards link to individual project pages with proper ID matching and state management to prevent "Project Not Found" errors
+- **Responsive Project Grid**: Project cards display in a responsive grid layout that adapts to different screen sizes while maintaining visual balance
+- **Contact Section**: Clean, professional contact information display featuring email (terrbrutus@gmail.com), phone number ((212) 603-9163), location (Arlington, VA), and LinkedIn profile link (https://www.linkedin.com/in/terrybrutus/) with fully editable bullet lists and tag groups, with left-aligned layout for "Get In Touch" content and "What I Can Help With" section
+
+### Individual Project Pages
+- **Dedicated Project Pages**: Each project has its own dedicated page accessible via clickable project cards
+- **Project Page Routing**: Implement proper routing to individual project pages with unique URLs for each project
+- **Reliable Project Navigation**: Ensure clicking project cards reliably navigates to the correct project page by properly linking project IDs and state management
+- **Project ID Matching**: Implement robust project ID matching system to prevent "Project Not Found" errors when navigating between project cards and project pages
+- **Customizable Project Content**: Project pages feature fully customizable content blocks including text sections, image carousels, and other editable elements
+- **Markdown Support for Project Pages**: Project detail pages support full markdown formatting including emphasis, headers, tables, lists, links, and other markdown syntax for rich content creation and formatting
+- **Clean Markdown List Rendering**: Ensure markdown bullet lists display only a single bullet per item, eliminating double bullets caused by overlapping list styles throughout all markdown-rendered content
+- **Consistent Markdown Styling**: Apply consistent CSS styling to all markdown-rendered lists to prevent duplicate bullets and ensure clean, professional appearance
+- **Editable Project Blocks**: All content blocks on project pages are editable when authenticated and in editor mode, with changes tracked in the global undo/redo system
+- **Project Page Management**: Project pages can be created, edited, and managed through the same authentication and editor system as the main portfolio
+- **Project Page Persistence**: All project page content and customizations are stored in the backend and persist across sessions and deployments
+- **Back to Portfolio Navigation**: "Back to Portfolio" button on project pages navigates directly to the "Projects" section on the main portfolio page, scrolling to position the Projects section header just below the fixed navigation bar for optimal visibility
+- **Full Project Page Editing**: Allow complete editing of all project page elements including text, images, carousels, and other content blocks when authenticated and in editor mode
+- **Comprehensive Project Page Content Management**: Support editing of separate project page details including text sections, image galleries, carousels, video embeds, and other rich media elements
+- **Project Page Edit Mode Integration**: All project page editing capabilities are fully integrated with the Edit Mode Active system, ensuring all changes are tracked and saved properly
+- **Functional Image Block System**: Image blocks on project pages support full image upload functionality with intuitive upload UI, proper image display, and persistent storage
+- **Image Block Upload Interface**: When adding an image block to a project page, provide clear and accessible upload controls that allow users to select and upload actual images
+- **Image Block Display**: Uploaded images in image blocks display correctly with proper sizing, formatting, and layout within the project page content
+- **Image Block Persistence**: All uploaded images in image blocks are properly stored in the backend and persist across sessions and deployments
+- **Image Block Integration**: Image block functionality is fully integrated with the global save, undo/redo, and revision history system like all other content blocks
+- **Image Block Editor Mode**: Image blocks are editable when authenticated and in editor mode, allowing upload, replacement, and removal of images
+- **Image Block Content Management**: Image blocks work seamlessly with all other content blocks and support the same editing capabilities and persistence mechanisms
+
+### Contact Information Display
+- **Static Contact Information**: Display contact details as clean, well-presented static information without form fields
+- **Email Display**: Show email address "terrbrutus@gmail.com" as clickable mailto link for easy access
+- **Phone Display**: Show phone number "(212) 603-9163" as clickable tel link for easy dialing
+- **Location Display**: Show location "Arlington, VA" as static text
+- **LinkedIn Integration**: Display LinkedIn profile link "https://www.linkedin.com/in/terrybrutus/" as part of the contact information
+- **Professional Layout**: Clean, modern layout that presents all contact information clearly and professionally with left-aligned "Get In Touch" content and "What I Can Help With" section
+- **Easy Copy/Click Access**: Ensure all contact details are easily copyable and clickable where appropriate
+- **No Form Elements**: Remove all contact form fields, submission buttons, and form-related functionality
+- **Contact Section Subtitle**: Display subtitle "Ready to create exceptional learning experiences together? I'd love to hear about your goals"
+- **Streamlined Contact Layout**: Remove the "Connect on LinkedIn" block and realign remaining content to the left for a cleaner, more professional layout
+
+### Project Management System
+- **Unlimited Project Creation**: "Add New Project" button creates unlimited blank project cards without any restrictions, with each card maintaining complete independence and data isolation
+- **Absolute Data Isolation**: Each new project card is completely independent with default blank values and absolute data isolation, preventing any data copying, interference, or contamination between projects
+- **Project Independence**: All project cards maintain complete independence with no shared state, ensuring adding, editing, or deleting one project never affects any other project
+- **Zero Cross-Project Interference**: Implement data management that completely prevents any project from affecting another project's data, images, or properties
+- **Reliable Unlimited Addition**: Support adding unlimited project cards in sequence without requiring editing or saving of previous cards, with each card persisting until explicitly deleted
+- **Complete Project Isolation**: Each project card operates in complete isolation with its own data, state, and properties that cannot be affected by operations on other projects
+- **Project Creation Logic**: Implement project creation logic that prevents all bugs where adding projects causes deletion, overwriting, or corruption of existing projects
+- **Guaranteed Project Persistence**: Every created project card persists reliably until explicitly deleted by the user, with no automatic deletion or overwriting
+- **Independent Project Editing**: Enable editing of any project card without affecting any other project card through robust data isolation and state management
+- **Parallel Project Management**: Support simultaneous editing of multiple project cards with complete data isolation and no interference between projects
+- **Delete Project Cards**: Clear delete/trash icon on each project card with confirmation prompt to prevent accidental deletion
+- **Direct Project Editing**: Click any field on project cards to edit directly in place, including both the hover description and the detailed markdown description
+- **Dual Description Fields**: Each project card includes two separate description fields - a plain text hover description for the card overlay and a markdown-formatted detailed description for the project page
+- **Hover Description Field**: Plain text field for the project card hover overlay that displays on card hover without any markdown formatting
+- **Detailed Description Field**: Markdown-formatted field for the project page that supports full markdown syntax including headers, emphasis, tables, lists, links, and other formatting
+- **Separate Description Editing**: Enable editing of both description fields independently - hover description for card overlay and detailed description for project page
+- **Description Field Isolation**: Ensure editing either description field updates only its intended display area, preventing markdown formatting from appearing in hover overlays
+- **Project URL Field**: Each project card includes an optional URL/link field that makes the card clickable or linkable when populated
+- **Project Data Integrity**: Ensure no project overwrites another's data and images/tags always stay with the correct project through robust data management
+- **Project Grid Display**: Responsive grid layout displaying all project cards with centered group layout and editable fields and delete buttons
+- **Project Reordering**: Implement completely reliable drag-and-drop reordering of project cards in editor mode with functionality that immediately updates the order and saves globally for all visitors without any glitches or failures
+- **Persistent Project Order**: Project card reordering persists globally for all visitors and maintains the new order across all sessions and devices with immediate backend synchronization
+- **Immediate Order Updates**: Drag-and-drop reordering provides immediate visual feedback and instantly saves the new order to the backend without requiring a separate save action
+- **Global Project Order Synchronization**: Project reordering changes are immediately visible to all visitors across all devices without delay
+- **Flawless Reorder Functionality**: Drag-and-drop reordering works consistently without any glitches, failures, or data corruption through robust implementation
+- **Complete Project Undo/Redo Integration**: All project-related actions (add, remove, edit, reorder, hover description edits, detailed description edits) are properly integrated into the global LIFO undo/redo stack with correct order where the most recent action is undone first
+- **Project Reorder Undo/Redo**: Project reordering operations are fully integrated into the undo/redo system and can be undone/redone like any other content change
+- **Unsaved Project Changes**: Visual indicators for unsaved changes on project cards that accurately reflect pending changes and are cleared when "Save" is clicked
+- **Instant Global Project Updates**: All project changes including reordering, hover description edits, and detailed description edits are immediately synchronized with the backend and visible to all visitors without delay
+- **Bulk Project Actions**: Optional bulk actions for deleting multiple projects at once
+- **Authenticated Project Management**: All project management capabilities are restricted to the authenticated owner
+- **User-Only Project Content**: Project cards display only user-provided content, never overridden by mock data, placeholders, or default content
+- **Clean Empty Project States**: Projects without user content show clean empty states instead of placeholder or mock content
+- **No Mock Data Override**: System never displays mock data, placeholder content, or default text/images for projects
+- **Reliable Project Thumbnail Upload**: Project thumbnail image uploads work reliably on the first attempt, with immediate visual feedback and proper error handling
+
+### Animation System
+- Each content section fades in smoothly every time it comes into view during scrolling
+- Animations trigger repeatedly when sections enter the viewport (not just on first load)
+- Smooth, professional transitions that enhance user experience
+- Sections animate on every scroll into view, allowing for repeated viewing experiences
+- **Enhanced Project Card Animations**: Smooth animation transitions for project card hover interactions with overlay effects and hover description animations
+
+### Layout and Design
+- Clean, modern design aesthetic suitable for professional portfolio presentation with interactive constellation background
+- Responsive layout that works across desktop and mobile devices
+- Typography and spacing optimized for readability and visual hierarchy
+- Professional color scheme and styling that complements the interactive constellation background
+- No footer text or branding displayed
+- **Proper Content Spacing**: Navigation bar does not overlap or cover the profile image or any other content elements
+- **Enhanced Profile Image Spacing**: Increased profile picture size with adequate spacing to ensure the name "Terry Brutus" is never cut off beneath the image
+- **Background Integration**: Interactive constellation serves as the primary background visual element with dark space theme
+- **Centered Project Layout**: Project section utilizes centered group layout with responsive grid that adapts to all screen sizes while maintaining visual balance
+
+## Authentication and Access Control
+
+### Internet Identity Integration
+- Owner authentication using Internet Identity with strict principal verification
+- Only the specific authenticated owner (verified by Internet Identity principal) can access editor mode
+- Regular visitors see the published, non-editable version of the site
+- Secure session management for owner access with principal-based authorization
+- **Immediate Admin Access**: After successful Internet Identity authentication, the "Edit" button and all editing controls appear immediately and reliably without requiring any additional steps, toggles, or sequences
+- **Reliable Admin Controls**: All admin functionality including the Edit button becomes available instantly upon authentication across all browsers and devices
+- **Direct Editor Access**: Authenticated owner gains immediate access to editor mode and all editing capabilities without any hidden sequences or additional requirements
+- **Cross-Browser Admin Consistency**: Admin controls appear consistently and immediately after login across all browsers and devices
+- **No Additional Steps Required**: Authentication with Internet Identity is the only requirement to access all admin functionality
+- **Principal-Based Access Control**: Editor mode access is restricted exclusively to the authenticated owner's Internet Identity principal
+- **Strict Authentication Verification**: All editing capabilities are gated behind verified Internet Identity authentication with principal matching
+- **No Profile Setup**: The application never prompts for profile setup or displays profile setup dialogs for any user, including on first login
+
+## WYSIWYG Editor Mode Features
+
+### Editor Mode UI Positioning
+- **Fixed Edit Mode Bar Positioning**: Position the blue "Edit Mode Active" bar with proper z-index and spacing to ensure it is never hidden behind the navigation bar and remains fully visible at all times
+- **Always Visible Editor Controls**: Ensure undo/redo/save buttons in the edit mode bar are always accessible and visible, positioned to avoid conflicts with the fixed navigation bar
+- **Proper Z-Index Management**: Implement appropriate z-index values to bring the edit mode bar to the front or position it slightly lower to prevent navigation bar overlap
+- **Edit Mode Bar Accessibility**: Guarantee that all editor controls remain clickable and accessible regardless of navigation bar positioning
+
+### Direct In-Place Editing
+- True "what-you-see-is-what-you-get" editor accessible only to authenticated owner with verified Internet Identity principal
+- Click or tap any text element on the page to edit it directly in place
+- Click or tap any image except the static profile image to replace it with an upload control
+- **Static Profile Image Non-Editable**: The profile image from "https://i.imgur.com/4NAe5Nx.png" is never editable and cannot be clicked, uploaded, or replaced
+- **Click or tap any button to edit its text, styling, and properties directly in place**
+- **Click or tap any bullet list or tag group to edit items directly in place**
+- **Click or tap project card hover descriptions to edit them directly in place as plain text**
+- **Click or tap project detailed descriptions to edit them directly in place with markdown support**
+- **Click or tap project page content blocks to edit them directly in place with markdown support**
+- **Click or tap image blocks on project pages to upload, replace, or edit images with intuitive upload interface**
+- All content elements except the static profile image become interactive and editable when in editor mode
+- Live preview of changes as they are made
+- Real-time updates without page refresh
+- **Immediate Global Synchronization**: All in-place edits (text, images except profile, buttons, lists, tags, project hover descriptions, project detailed descriptions, project page blocks, image blocks) are immediately saved to the backend and synchronized globally, making changes visible to all visitors across all devices instantly
+- **Universal Content Visibility**: All content changes are instantly reflected for all users, including non-authenticated visitors, ensuring global consistency across all devices and sessions
+- **Strict Editor Mode UI Control**: All in-place editing UI elements (hover outlines, edit indicators, click affordances) only appear when in editor mode and are completely invisible to regular visitors
+- **Principal-Verified Editing**: All editing functionality is strictly limited to the authenticated owner's Internet Identity principal
+- **Complete UI Isolation**: No editing UI elements, hover effects, or edit affordances are visible to any user except the authenticated owner in editor mode
+
+### Editor Controls
+- **Custom Save Button**: Dedicated "Save" button in editor mode that persists all pending changes to projects, content, lists, tags, contact information, project hover descriptions, project detailed descriptions, project page blocks, and image blocks globally, ensuring all edits are saved for every visitor
+- **Unsaved Changes Tracking**: "Unsaved" tag on project cards, content sections, contact information, project pages, and image blocks that accurately reflects when there are unsaved changes, and clicking "Save" clears this state for all elements
+- **Global LIFO Undo/Redo System**: All changes (add, edit, delete, reorder) including list, tag, project reordering, project hover description edits, project detailed description edits, project page block edits, image block operations, and contact information operations are properly integrated into a global Last-In, First-Out undo/redo stack, ensuring undo/redo works for every action in the correct chronological order
+- **Backend-Synchronized Actions**: Saving, undo, and redo actions update the backend so all visitors see the latest state, not just the admin
+- **Stack-Based Undo/Redo**: True stack-based undo/redo system where the most recent action is always the first undone/redone, ensuring proper order for all operations
+- **Complete Content Reversion**: Undo functionality properly reverts all types of content changes including text edits, image uploads (except profile), button modifications, project additions, project deletions, project edits, project reordering, project hover description edits, project detailed description edits, project page block edits, image block operations, list modifications, tag changes, contact information edits, and any other content modifications
+- **Full Content Reapplication**: Redo functionality properly reapplies all types of content changes that were previously undone including all project-related actions, project reordering, project hover description edits, project detailed description edits, project page block edits, image block operations, list operations, tag modifications, and contact information changes
+- **Comprehensive Edit History**: Track complete edit history for all content types and allow navigation through all edit states with visual feedback on undo/redo button availability
+- **Editor-Only Visibility**: All editor controls are strictly visible only in editor mode for the authenticated owner
+
+### Content Editing Capabilities
+- Edit all text content by clicking directly on it (headings, paragraphs, labels, navigation text)
+- Rich text editing with formatting options for selected text elements
+- Edit contact information by clicking directly on email, phone, or location fields
+- **Edit contact information fields, labels, and properties through direct interaction**
+- **Modify button text, styling, and properties through direct interaction**
+- **Edit bullet lists and tag groups by clicking directly on them with add, remove, and reorder capabilities**
+- **Edit project card hover descriptions by clicking directly on them as plain text**
+- **Edit project detailed descriptions by clicking directly on them with full markdown support**
+- **Edit project page content blocks by clicking directly on them with full markdown support**
+- **Edit image blocks on project pages by clicking directly on them to access upload interface and image management**
+- **Authenticated-Only Editing**: All content editing capabilities are exclusively available to the authenticated owner
+- **Immediate Global Content Updates**: All content edits including list, tag, project hover description, project detailed description, project page block, image block, and contact information changes are immediately synchronized with the backend and visible to all visitors across all devices without delay
+
+### Media Management
+- Click on any image except the static profile image to open upload interface for replacement
+- Support for PNG, JPG, GIF formats
+- Click on video elements to replace with new MP4 or other common video formats
+- Drag and drop functionality for media uploads
+- Instant preview of uploaded media in place
+- **Static Profile Image Exclusion**: The profile image from "https://i.imgur.com/4NAe5Nx.png" is never included in media management and cannot be edited or replaced
+- **Project Page Media Management**: Support media uploads and management within project page content blocks
+- **Image Block Media Management**: Full media management capabilities for image blocks on project pages, including upload, replacement, and removal of images
+- **Image Block Upload Interface**: Intuitive and accessible upload controls for image blocks that allow users to select and upload actual images
+- **Image Block Display Management**: Proper display of uploaded images in image blocks with correct sizing, formatting, and layout
+- **Image Block Persistence**: All uploaded images in image blocks are stored in the backend and persist across sessions and deployments
+- **Instant Global Media Synchronization**: All uploaded media including image block content is immediately saved to the backend and visible to all visitors across all devices without delay
+- **Authenticated Media Management**: All media management capabilities are restricted to the authenticated owner
+
+### Interactive Element Editing
+- **Click on buttons to edit text, colors, styling, and properties**
+- **Click on bullet lists to add, remove, edit, and reorder list items**
+- **Click on tag groups to add, remove, edit, and reorder individual tags**
+- **Click on contact information elements to edit fields, labels, and properties**
+- **Click on project card hover descriptions to edit plain text content directly**
+- **Click on project detailed descriptions to edit markdown content directly**
+- **Click on project page content blocks to edit and customize content with markdown support**
+- **Click on image blocks to access upload interface and manage images**
+- Edit navigation elements by clicking directly on them
+- Modify contact information fields and labels through direct interaction
+- **Principal-Verified Interaction**: All interactive editing is limited to the authenticated owner's Internet Identity principal
+- **Instant Global Interactive Updates**: All interactive element changes including list, tag, project hover description, project detailed description, project page block, image block, and contact information modifications are immediately synchronized with the backend and visible to all visitors without delay
+
+### Editable Lists and Tags System
+- **Bullet List Editing**: All bullet lists in About Me and Contact sections are fully editable in editor mode, allowing direct addition, removal, and reordering of list items
+- **Tag Group Editing**: All tag groups in About Me and Contact sections are fully editable in editor mode, allowing direct addition, removal, and reordering of individual tags
+- **Direct List Manipulation**: Click on any bullet list or tag group to edit items directly on the page when in editor mode
+- **Add List Items**: Click "Add Item" or similar control to add new bullet points or tags to existing lists
+- **Remove List Items**: Click delete/remove controls on individual list items or tags to remove them from lists
+- **Reorder List Items**: Drag and drop functionality to reorder bullet points and tags within their respective lists
+- **Inline List Editing**: Edit the text content of individual bullet points and tags by clicking directly on them
+- **List Structure Preservation**: Maintain proper list formatting and structure while allowing full content editing
+- **Global List Synchronization**: All bullet list and tag changes are immediately saved to the backend and visible to all visitors globally
+- **List Undo/Redo Integration**: All bullet list and tag operations (add, remove, edit, reorder) are integrated into the global LIFO undo/redo stack
+- **List Change Tracking**: Track all bullet list and tag modifications in the revision history system with proper versioning
+- **Authenticated List Editing**: All bullet list and tag editing capabilities are exclusively available to the authenticated owner in editor mode
+
+### Project Description Management System
+- **Dual Description Fields**: Each project includes two separate description fields - hover description and detailed description
+- **Hover Description Editing**: Plain text field for project card hover overlay that can be edited directly by clicking on the hover overlay when in editor mode
+- **Detailed Description Editing**: Markdown-formatted field for project pages that can be edited directly with full markdown syntax support
+- **Description Field Separation**: Hover description and detailed description are completely separate fields with independent editing and storage
+- **Plain Text Hover Display**: Hover overlay displays only plain text without any markdown formatting, ensuring clean presentation
+- **Markdown Detailed Display**: Project pages display detailed description with full markdown rendering including headers, emphasis, tables, lists, links, and other formatting
+- **Independent Description Updates**: Editing either description field updates only its intended display area without affecting the other field
+- **Hover Description Isolation**: Markdown formatting never appears in hover overlays, maintaining clean plain text display
+- **Detailed Description Markdown Support**: Full markdown syntax support for detailed descriptions on project pages
+- **Description Field Undo/Redo**: Both hover description and detailed description edits are integrated into the global undo/redo system
+- **Description Change Tracking**: Track all description modifications in the revision history system with proper versioning for both fields
+- **Global Description Synchronization**: All description changes are immediately saved to the backend and visible to all visitors globally
+- **Authenticated Description Editing**: All description editing capabilities are exclusively available to the authenticated owner in editor mode
+
+### Project Page Content Block System
+- **Customizable Content Blocks**: Project pages support various types of editable content blocks including text sections, image carousels, video embeds, and other rich media elements
+- **Direct Block Editing**: Click on any content block on project pages to edit directly in place when in editor mode
+- **Markdown Content Block Support**: Project page content blocks support full markdown formatting including headers, emphasis, tables, lists, links, code blocks, and other markdown syntax for rich content creation
+- **Clean Markdown List Rendering**: Ensure markdown bullet lists in content blocks display only a single bullet per item, eliminating double bullets caused by overlapping list styles
+- **Consistent Markdown Styling**: Apply consistent CSS styling to all markdown-rendered lists in content blocks to prevent duplicate bullets and ensure clean, professional appearance
+- **Block Type Management**: Support adding, removing, and reordering different types of content blocks on project pages
+- **Rich Content Support**: Content blocks support rich text formatting, media embedding, and advanced layout options with markdown rendering
+- **Image Block Functionality**: Image blocks support full image upload functionality with intuitive upload UI, proper image display, and persistent storage
+- **Image Block Upload System**: When adding or editing image blocks, provide clear and accessible upload controls that allow users to select and upload actual images
+- **Image Block Display System**: Uploaded images in image blocks display correctly with proper sizing, formatting, and layout within the project page content
+- **Image Block Persistence System**: All uploaded images in image blocks are properly stored in the backend and persist across sessions and deployments
+- **Image Block Integration System**: Image block functionality is fully integrated with the global save, undo/redo, and revision history system like all other content blocks
+- **Block Undo/Redo Integration**: All project page content block operations including image block operations are integrated into the global undo/redo system
+- **Block Change Tracking**: Track all project page content block modifications including image block changes in the revision history system
+- **Global Block Synchronization**: All project page content block changes including image block updates are immediately saved to the backend and visible to all visitors globally
+- **Authenticated Block Editing**: All project page content block editing capabilities including image block management are exclusively available to the authenticated owner in editor mode
+- **Comprehensive Project Page Editing**: Allow full editing of all separate project page details including text, images, carousels, and other content elements with complete integration into the Edit Mode Active system
+
+### Comprehensive Revision History System
+- **Fixed Revision History Modal**: Revision history modal with proper text containment, full readability, and scrollable content when overflow occurs to ensure all text stays within modal boundaries
+- **Scrollable Modal Content**: Implement scrollable content area within the revision history modal to handle content overflow gracefully
+- **Text Boundary Management**: Ensure all text content within the revision history modal stays within the modal boundaries and remains fully readable
+- **Modal Content Overflow Handling**: Proper handling of content overflow in the revision history modal with scrolling functionality when needed
+- **Revision History Interface**: Dedicated "History" button or section in editor mode, accessible only to the authenticated owner, providing comprehensive revision management capabilities
+- **Complete Revision Tracking**: Track all content and media changes with timestamps for every edited element including text, images (except profile), buttons, projects, project reordering, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, contact information, and any other editable content
+- **Save Instance Tracking**: Each custom save operation creates a new revision entry with timestamp and complete content snapshot
+- **Edit Instance Tracking**: Each individual edit operation is tracked in the revision history with detailed change information
+- **Revision Browsing Interface**: Browse through all previous revisions with clear timestamps, allowing navigation through complete edit history
+- **Revision Preview Capability**: Preview any previous revision to see exactly how the content appeared at that point in time
+- **Functional Revision Restore**: "Restore" button for each revision that properly restores the selected previous state and updates the live site immediately
+- **Complete Content Restoration**: Restore functionality works for all content types including text, images (except profile), buttons, projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, contact information, and any other editable elements
+- **Global Revision Updates**: Restoring a revision updates the live site for all visitors immediately, ensuring all changes remain globally visible
+- **Revision Metadata Storage**: Maintain revision metadata including edit dates, content types changed, and revision descriptions
+- **Individual Element History**: View history of edits for each individual component (text, image except profile, button, project, project order, project hover description, project detailed description, project page block, image block, list, tag, contact information, etc.) with detailed change tracking
+- **Side-by-Side Revision Comparison**: Compare different versions of individual elements side by side to understand changes between revisions
+- **Revision State Management**: Track revision states and provide proper navigation through revision history with clear visual indicators
+- **Authenticated Revision Access**: All revision history features are exclusively available to the authenticated owner with verified Internet Identity principal
+- **Instant Global Revision Synchronization**: All revision changes and restorations are immediately synchronized with the backend and visible to all visitors without delay
+- **Comprehensive Revision Coverage**: Revision system covers all editable content including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, contact information, text, images (except profile), buttons, and any other content modifications
+- **Revision History Integration**: Revision history system integrates with the global undo/redo system and custom save functionality for comprehensive version control
+
+### Autosave and Version Control
+- **Autosave Functionality**: Automatically save edits every 1-2 minutes, storing revision history for all content changes including list, tag, project reordering, project hover description, project detailed description, project page block, image block, and contact information modifications
+- **Manual Save Control**: Provide a custom Save button to mark the current version as the latest and commit all pending changes
+- **Revision History Storage**: Store complete revision history with timestamps for all autosaved and manually saved versions
+- **Version Management**: Maintain version control system that tracks both autosaved drafts and manually saved versions
+- **Authenticated Autosave**: All autosave and version control features are restricted to the authenticated owner
+
+### Publishing Control
+- Save drafts of individual element changes without publishing
+- Publish all changes to make them visible to regular visitors
+- Preview unpublished changes in editor mode
+- Selective publishing of individual element changes
+- **Owner-Only Publishing**: All publishing controls are restricted to the authenticated owner
+- **Instant Global Publishing**: All published changes are immediately synchronized with the backend and visible to all visitors across all devices without delay
+
+## Technical Requirements
+
+### Frontend Architecture
+- **Modular Component Structure**: Organize all React components into separate files by feature and functionality for improved maintainability and generation speed
+- **Component Separation**: Split components into individual files including Navigation, Hero, About, Projects, Contact, ConstellationBackground, ProjectPage, and all editor-related components
+- **Hook Organization**: Extract all custom hooks into separate files organized by functionality (useAuth, useEditor, useProjects, useProjectPages, useRevisionHistory, useConstellation, etc.)
+- **Utility Organization**: Organize utility functions into separate modules by purpose (api, validation, formatting, animation, routing, etc.)
+- **Service Layer**: Create dedicated service modules for API communication, authentication, data management, and routing
+- **Type Definitions**: Organize TypeScript interfaces and types into separate definition files by domain
+- **Constant Management**: Extract constants and configuration into separate files organized by feature
+- **Import/Export Management**: Ensure all imports and exports are properly updated to maintain full functionality after refactoring
+- **Barrel Exports**: Implement index files for clean import paths and better organization
+- **Feature-Based Organization**: Group related components, hooks, and utilities by feature domain for better maintainability
+
+### Frontend Technical Implementation
+- **Critical Page Loading Implementation**: Implement comprehensive error handling, robust data fetching, and proper component initialization to ensure the portfolio page loads completely with all content visible, preventing blank page issues
+- **Content Rendering Verification**: Ensure all portfolio sections (hero, about, projects, contact, project pages) render correctly on page load with proper error boundaries and fallback mechanisms
+- **Data Loading Reliability**: Implement retry mechanisms and proper error handling for all data fetching operations to guarantee content always loads and displays
+- **UI Error Recovery**: Implement comprehensive error recovery mechanisms to handle content loading failures and ensure the page always displays content instead of remaining blank
+- **Loading State Implementation**: Provide proper loading indicators and error messages when content is loading or fails to load, preventing blank page experiences
+- **Component Error Boundaries**: Implement React error boundaries around all major components to catch and handle rendering errors gracefully
+- **Fallback Content Implementation**: Provide fallback content or default states when primary content fails to load instead of showing blank pages
+- **Frontend Stability Enhancement**: Ensure frontend components render reliably without crashes or failures that could cause blank pages
+- **Data Fetching Robustness**: Implement robust data fetching mechanisms with retry logic and error handling to prevent API failures from causing blank pages
+- **Component Initialization Verification**: Ensure proper initialization of all content sections and components on page load with verification mechanisms
+- **Custom Domain File Configuration**: Create `.well-known/ic-domains` file in the `public/.well-known/` directory containing `terrylxd.com` with no file extension
+- **Asset Configuration File**: Create `ic-assets.json` file in the frontend root directory with configuration `[ { "match": ".well-known", "ignore": false } ]` to properly serve the domain configuration
+- **Domain File Serving**: Ensure the `.well-known` directory and its contents are properly served by the frontend
+- **Build Output Domain File**: Ensure the `public/.well-known/ic-domains` file is included in the frontend build output and accessible at the correct path for custom domain registration
+- **Asset Configuration Verification**: Verify that `ic-assets.json` is present in the frontend root directory and properly configured to serve the `.well-known` directory
+- **Runtime Asset Accessibility**: Ensure the static asset file `public/.well-known/ic-domains` is present in the final build/output directory so it is accessible at `/.well-known/ic-domains` at runtime
+- **Build Output Tree Verification**: After building, print the final build/output folder tree (e.g., `dist/out`) with full paths for all public assets, specifically confirming the presence and location of `public/.well-known/ic-domains`
+- **Correct Deployment Location**: If `public/.well-known/ic-domains` is not in the correct location, move it so it is deployed at exactly `/.well-known/ic-domains` in the canister
+- **Asset Configuration Confirmation**: Confirm that `ic-assets.json` is included and configured to expose the `.well-known` directory as a public asset
+- **Fixed Edit Mode Bar UI**: Implement proper positioning and z-index management for the blue "Edit Mode Active" bar to ensure it is never hidden behind the navigation bar and all editor controls remain visible and accessible
+- **Editor Control Visibility**: Ensure undo/redo/save buttons are always visible and clickable by positioning the edit mode bar appropriately relative to the fixed navigation bar
+- **Z-Index Management**: Implement proper layering to bring the edit mode bar to the front or position it to avoid navigation bar conflicts
+- **Fixed Revision History Modal UI**: Implement revision history modal with proper text containment, scrollable content area, and overflow handling to ensure all text stays within modal boundaries and remains fully readable
+- **Modal Scrolling Implementation**: Add scrollable content area within the revision history modal to handle content overflow gracefully
+- **Modal Text Boundary Control**: Ensure all text content within the revision history modal is properly contained within the modal boundaries
+- **Modal Content Overflow Management**: Implement proper overflow handling with scrolling functionality when revision history content exceeds modal size
+- **Reliable Project Thumbnail Upload UI**: Implement reliable project thumbnail image upload functionality that works on the first attempt with immediate visual feedback and proper error handling
+- **Project Image Upload Reliability**: Ensure project thumbnail uploads update immediately without requiring multiple attempts through robust upload handling
+- **Upload Error Handling**: Implement comprehensive error handling for project image uploads to prevent upload failures and provide clear feedback
+- **Immediate Upload Feedback**: Provide instant visual feedback when project thumbnails are uploaded successfully
+- **Image Block Upload UI Implementation**: Implement intuitive and accessible upload interface for image blocks on project pages that allows users to select and upload actual images
+- **Image Block Display Implementation**: Implement proper display of uploaded images in image blocks with correct sizing, formatting, and layout within project page content
+- **Image Block Persistence Implementation**: Ensure all uploaded images in image blocks are properly stored in the backend and persist across sessions and deployments
+- **Image Block Integration Implementation**: Fully integrate image block functionality with the global save, undo/redo, and revision history system like all other content blocks
+- **Image Block Editor Mode Implementation**: Implement image block editing capabilities when authenticated and in editor mode, allowing upload, replacement, and removal of images
+- **Image Block Content Management Implementation**: Ensure image blocks work seamlessly with all other content blocks and support the same editing capabilities and persistence mechanisms
+- **Interactive Constellation Background Implementation**: Implement dynamic constellation background system with 50-80 randomly positioned stars of varying sizes and brightness
+- **Star Generation System**: Create algorithm for generating 50-80 stars at random positions across the viewport with varying sizes and brightness levels
+- **Star Animation Implementation**: Implement glowing, pulsing animation effects for all stars with smooth transitions and varying pulse rates
+- **Cursor Line Drawing System**: Implement smooth, anti-aliased line drawing system that connects stars within 150px of cursor or touch position
+- **Distance-Based Opacity System**: Implement line opacity fading based on distance from cursor for dynamic visual depth
+- **Star Brightness Enhancement System**: Implement system to brighten connected stars when they are linked by constellation lines
+- **Multi-Device Interaction Support**: Implement both mouse cursor tracking for desktop and touch position tracking for mobile devices
+- **Dark Space Background Implementation**: Implement dark space-themed background for high contrast and professional appearance
+- **Dynamic Constellation Pattern System**: Create evolving constellation patterns that change as cursor moves through different areas
+- **WCAG Accessibility Implementation**: Maintain high text contrast and WCAG accessibility standards with all UI elements remaining fully readable
+- **Performance Optimized Constellation**: Implement efficient rendering techniques to maintain smooth 60fps animation without impacting page performance
+- **Responsive Constellation Implementation**: Ensure constellation effect adapts to all screen sizes and orientations while maintaining visual quality
+- **Non-Intrusive Constellation Design**: Ensure constellation effect enhances design without interfering with content readability or navigation functionality
+- **Smooth Animation Transitions**: Implement smooth transitions for star connections and disconnections as cursor moves
+- **Touch Event Support Implementation**: Implement full touch event handling for mobile devices with finger position tracking
+- **Canvas-Based Rendering Implementation**: Use HTML5 Canvas or WebGL for efficient star and line rendering
+- **Star Positioning Algorithm Implementation**: Implement algorithm for natural-looking star distribution across the viewport
+- **Line Connection Logic Implementation**: Implement efficient proximity detection and line drawing between stars and cursor position
+- **Visual Depth Effects Implementation**: Create visual depth through varying star sizes, brightness, and connection line weights
+- **Enhanced Profile Image Implementation**: Increase the size of the profile picture on the landing page and implement proper spacing to ensure the name "Terry Brutus" is never cut off beneath the image
+- **Profile Image Spacing Fix**: Adjust layout and spacing around the profile image to prevent text cutoff and ensure proper visual hierarchy
+- **Traditional Project Card Implementation**: Implement project cards using the traditional design as shown in the reference images, filling the entire card area with proper layout and styling
+- **Full Card Coverage Implementation**: Ensure project cards fill the complete card area with proper image display and content layout matching the reference design
+- **Functional Project Card Hover Implementation**: Implement fully functional hover overlays on project cards that display the project summary text when hovered over or tapped, providing quick preview of project content with proper animation and text display
+- **Working Hover Animation Implementation**: Implement hover overlays that appear smoothly on mouseover/tap with correct animation timing and visual effects
+- **Clickable Project Card Implementation**: Implement clickable project card functionality that reliably navigates to individual project pages
+- **Project Card Navigation Implementation**: Implement proper project card navigation with robust ID matching and state management to prevent "Project Not Found" errors
+- **Project ID Matching Implementation**: Implement reliable project ID matching system to ensure clicking project cards navigates to the correct project page
+- **Responsive Project Grid Implementation**: Implement responsive project grid layout with centered group positioning where project cards are always centered as a group regardless of the number of cards
+- **Responsive Centered Layout Implementation**: Ensure the centering logic works across all screen sizes, maintaining visual balance when cards wrap to new rows or when there are fewer cards than the maximum per row
+- **Interactive Project Card UI**: Create interactive project card interface with hover states, animation transitions, and clickable navigation
+- **Project Page Routing Implementation**: Implement proper routing system for individual project pages with unique URLs and navigation
+- **Project Page Component System**: Create project page components with customizable content blocks and editing capabilities
+- **Projects Navigation Button Implementation**: Implement "Projects" button in navigation bar without dropdown arrow that appears as a standard button and navigates directly to the Projects section
+- **Standard Button Navigation**: Remove dropdown functionality from Projects navigation and implement as a standard button that scrolls to the Projects section
+- **Project Page Content Blocks**: Implement various content block types for project pages including text sections, image carousels, and rich media elements
+- **Markdown Support Implementation**: Implement full markdown parsing and rendering for project page content blocks, supporting headers, emphasis, tables, lists, links, code blocks, and other markdown syntax
+- **Clean Markdown List Implementation**: Update markdown renderer and CSS to ensure bullet lists display only a single bullet per item, eliminating double bullets caused by overlapping list styles throughout all markdown-rendered content
+- **Consistent Markdown List Styling**: Apply consistent CSS styling to all markdown-rendered lists to prevent duplicate bullets and ensure professional appearance across all markdown content
+- **Project Page Editor Integration**: Integrate project page editing capabilities with the main editor system and global undo/redo stack
+- **Back to Portfolio Navigation Implementation**: Implement "Back to Portfolio" button functionality that scrolls directly to the "Projects" section on the main portfolio page, positioning the Projects section header just below the fixed navigation bar
+- **Projects Section Scroll Navigation**: Ensure "Back to Portfolio" button calculates proper scroll offset to position the Projects section optimally below the fixed navigation bar
+- **Comprehensive Project Page Editing Implementation**: Implement full editing capabilities for all project page elements including text, images, carousels, and other content blocks with complete Edit Mode Active integration
+- **Project Page Edit Mode Integration**: Fully integrate all project page editing capabilities with the Edit Mode Active system, ensuring all changes are tracked and saved properly
+- **Dual Description Field Implementation**: Implement separate hover description and detailed description fields for each project with independent editing and display
+- **Hover Description Field UI**: Implement plain text editing interface for project card hover descriptions that appear on card overlay
+- **Detailed Description Field UI**: Implement markdown editing interface for project detailed descriptions that appear on project pages
+- **Description Field Separation UI**: Ensure editing either description field updates only its intended display area without affecting the other field
+- **Plain Text Hover Display Implementation**: Implement hover overlay that displays only plain text without any markdown formatting
+- **Markdown Detailed Display Implementation**: Implement project page display of detailed descriptions with full markdown rendering
+- **Description Field Isolation Implementation**: Prevent markdown formatting from appearing in hover overlays while maintaining full markdown support on project pages
+- **Independent Description Update Implementation**: Ensure editing either description field updates only its intended display area
+- **Description Field Undo/Redo Implementation**: Integrate both hover description and detailed description edits into the global undo/redo system
+- **Description Change Tracking Implementation**: Track all description modifications in the revision history system for both fields
+- **Instant Global Content Synchronization**: Ensure all content changes made in editor mode are immediately synchronized with the backend and reflected globally for all visitors across all devices without delay
+- **Real-Time Universal Updates**: Implement real-time synchronization of all edits (text, images except profile, buttons, projects, project reordering, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, contact information) with the backend to ensure immediate global visibility to all users regardless of authentication status
+- **Backend-First Content Management**: All content changes must be saved to the backend first and then reflected in the frontend to ensure instant global consistency
+- **Cross-Device Synchronization**: Ensure that content changes made on one device are immediately visible on all other devices and to all visitors without delay
+- **Static Profile Image Implementation**: Display static profile image from "https://i.imgur.com/4NAe5Nx.png" as a larger circular avatar with proper cropping and enhanced spacing to prevent text cutoff
+- **Non-Editable Profile Image**: Ensure the profile image cannot be clicked, edited, uploaded, or replaced by any user including the authenticated owner
+- **Image Loading Stability**: Ensure all uploaded images except the static profile image load reliably without causing page rendering issues
+- **Edit Mode Stability**: Ensure editor mode functions reliably with all editing features working as expected
+- **Instant Global Data Synchronization**: Implement comprehensive data synchronization between frontend state and backend storage to prevent data loss and ensure instant global consistency
+- **Persistent Backend Storage Integration**: Implement frontend integration with persistent backend storage that ensures all edits are immediately written to the backend and survive deployments
+- **Real-Time Backend Write Operations**: Ensure all content changes trigger immediate write operations to the backend's persistent storage system
+- **Deployment-Safe Frontend State**: Implement frontend state management that relies entirely on backend-stored data, ensuring no content is lost during deployments
+- **Migration-Aware Frontend**: Design frontend to automatically load all content from the backend's persistent storage, ensuring seamless data migration across deployments
+- Implement scroll-triggered fade-in animations that trigger every time sections enter viewport
+- Animation system that resets and replays on each scroll interaction
+- Responsive design with mobile-first approach
+- **Smart Scroll Navigation**: Implement scroll-to-section functionality that accounts for fixed navigation bar height, positioning section headers just below the navigation bar for full visibility
+- **Navigation Bar Height Calculation**: Calculate and account for navigation bar height when scrolling to sections to ensure proper positioning
+- **Scroll Offset Implementation**: Apply appropriate scroll offset to prevent section headers from being hidden behind the fixed navigation bar
+- Optimized performance for repeated animation rendering
+- **Static Profile Image Display**: Display static profile image from "https://i.imgur.com/4NAe5Nx.png" as a larger circular avatar with enhanced spacing, visible to all visitors and never editable
+- **No Profile Image Upload Logic**: Remove any logic for profile image uploads, editing, or replacement functionality
+- **Navigation Layout Implementation**: Ensure navigation bar does not overlap or cover the profile image or any other content, implementing proper spacing and positioning
+- Display GIF logo from "https://i.imgur.com/DHmkhf9.gif" in navigation bar with enlarged sizing (approximately 3x standard size) for prominent branding
+- **Immediate Admin Access Implementation**: After successful Internet Identity authentication, implement immediate display of the "Edit" button and all editing controls without requiring any additional steps, toggles, or sequences
+- **Reliable Admin Controls Implementation**: Implement admin functionality that becomes available instantly upon authentication across all browsers and devices
+- **Direct Editor Access Implementation**: Implement immediate access to editor mode and all editing capabilities for authenticated owners without any hidden sequences or additional requirements
+- **Cross-Browser Admin Consistency Implementation**: Implement admin controls that appear consistently and immediately after login across all browsers and devices
+- **No Additional Steps Implementation**: Implement authentication flow where Internet Identity is the only requirement to access all admin functionality
+- **Principal-Based Editor Access**: Implement strict Internet Identity principal verification for editor mode access
+- **Complete UI Isolation**: Ensure all editing UI elements (hover outlines, edit indicators, click affordances) are completely invisible to all users except the authenticated owner in editor mode
+- **Editor Mode UI Control**: All editing UI elements strictly only visible in editor mode and completely hidden for regular visitors
+- **No Profile Setup Implementation**: Never display profile setup dialogs or prompts for any user, including on first login or authentication
+- WYSIWYG editor interface that makes all page elements except the static profile image clickable and editable in place for authenticated owner only
+- Click-to-edit functionality for all text, images except profile, buttons, and interactive elements restricted to authenticated owner
+- **Button Editing Interface**: Implement click-to-edit functionality for all buttons, allowing direct editing of text, styling, and properties in place for authenticated owner only
+- **List and Tag Editing Interface**: Implement comprehensive editing interface for bullet lists and tag groups with add, remove, edit, and reorder capabilities restricted to authenticated owner only
+- **List Item Management Interface**: Individual list item and tag editing controls with direct manipulation capabilities
+- **List Structure Interface**: Maintain proper list formatting and visual structure while allowing full content editing
+- **Drag-and-Drop List Interface**: Implement drag-and-drop reordering for list items and tags within their respective containers
+- **Add List Item Interface**: Provide "Add Item" controls for adding new bullet points and tags to existing lists
+- **Remove List Item Interface**: Provide delete/remove controls for individual list items and tags
+- **Inline List Text Editing**: Enable direct text editing of individual bullet points and tags by clicking on them
+- **Project Management Interface**: Implement project management interface that supports unlimited project creation with complete data isolation and zero cross-project interference
+- **Unlimited Project Creation Interface**: Support creating unlimited blank project cards without restrictions, with each card maintaining complete independence
+- **Absolute Project Isolation Interface**: Each project card operates in complete isolation with data management preventing any interference between projects
+- **Zero Cross-Project Contamination Interface**: Implement interface logic that completely prevents any project from affecting another project's data, images, or properties
+- **Reliable Project Addition Interface**: Enable adding unlimited projects in sequence without requiring editing or saving of previous cards, with guaranteed persistence
+- **Independent Project Editing Interface**: Enable editing of any project card without affecting any other project card through robust data isolation
+- **Parallel Project Management Interface**: Support simultaneous editing of multiple project cards with complete data isolation
+- **Enhanced Project Grid Interface**: Display responsive centered group grid of project cards with all editing capabilities visible only in editor mode
+- **Project Card Interface**: Individual project cards with editable fields (title, hover description, detailed description, image, tags, URL) and delete buttons
+- **Project URL Interface**: Optional URL/link field on each project card that makes cards clickable when populated
+- **Dual Description Interface**: Separate editing interfaces for hover description (plain text) and detailed description (markdown) fields
+- **Hover Description Editing Interface**: Plain text editing interface for project card hover descriptions that appear on card overlay
+- **Detailed Description Editing Interface**: Markdown editing interface for project detailed descriptions that appear on project pages with full syntax support
+- **Description Field Separation Interface**: Ensure editing either description field updates only its intended display area without cross-contamination
+- **Multi-line Description Interface**: Both description fields support multi-line input with consistent text wrapping and reliable formatting behavior
+- **Add New Project Interface**: Always-visible "Add New Project" button in editor mode that creates independent blank project cards with isolation
+- **Project Delete Interface**: Clear delete/trash icons with confirmation prompts on each project card
+- **Drag-and-Drop Interface**: Implement completely reliable drag-and-drop interface for reordering project cards with immediate visual feedback and instant backend synchronization, eliminating all glitches and failures
+- **Immediate Project Order Interface**: Ensure project card reordering interface immediately updates the order and saves to backend without requiring separate save action
+- **Global Project Order Interface**: Project reordering interface ensures changes are immediately visible to all visitors across all devices
+- **Flawless Reorder Interface**: Provide completely consistent drag-and-drop functionality without any glitches, failures, or data corruption
+- **Complete Project Undo/Redo Interface**: Properly integrate all project operations including reordering, hover description edits, and detailed description edits into the global undo/redo system with correct stack-based functionality
+- **Bulk Project Interface**: Optional bulk action interface for managing multiple projects
+- **Unsaved Changes Interface**: Visual indicators for unsaved changes on project cards, content sections, and project pages that accurately reflect pending changes and are cleared when "Save" is clicked
+- **Project Card Click Handling**: Implement click handling for project cards that navigates to individual project pages when not in edit mode
+- **Project Page Navigation Interface**: Implement navigation interface for individual project pages with proper routing and URL management
+- **Project Page Content Block Interface**: Implement interface for various content block types on project pages including text sections, image carousels, and rich media elements
+- **Markdown Content Interface**: Implement markdown parsing and rendering interface for project page content blocks with full syntax support
+- **Project Page Editor Interface**: Implement project page editing interface with direct click-to-edit functionality for all content blocks with markdown support
+- **Project Page Block Management Interface**: Interface for adding, removing, and reordering content blocks on project pages
+- **Comprehensive Project Page Editing Interface**: Implement interface for full editing of all separate project page details including text, images, carousels, and other content elements with complete Edit Mode Active integration
+- **Image Block Interface Implementation**: Implement comprehensive interface for image blocks on project pages with upload functionality, display management, and editing capabilities
+- **Image Block Upload Interface Implementation**: Create intuitive and accessible upload controls for image blocks that allow users to select and upload actual images with immediate visual feedback
+- **Image Block Display Interface Implementation**: Implement proper display interface for uploaded images in image blocks with correct sizing, formatting, and layout within project page content
+- **Image Block Persistence Interface Implementation**: Ensure image block interface properly handles storage and retrieval of uploaded images with backend persistence
+- **Image Block Integration Interface Implementation**: Fully integrate image block interface with the global save, undo/redo, and revision history system like all other content blocks
+- **Image Block Editor Mode Interface Implementation**: Implement image block editing interface when authenticated and in editor mode, allowing upload, replacement, and removal of images
+- **Image Block Content Management Interface Implementation**: Ensure image block interface works seamlessly with all other content blocks and supports the same editing capabilities and persistence mechanisms
+- **Edit Mode Click Prevention**: Disable project card navigation functionality when in edit mode to prevent interference with editing actions
+- **New Tab Link Opening**: Ensure all project card links open in new browser tabs using appropriate target attributes
+- **Visitor-Only Link Behavior**: Enable clickable project card behavior only for regular visitors, not for authenticated owners in edit mode
+- **User-Only Project Content Display**: Display only user-provided project content, never mock data, placeholders, or default content
+- **Clean Empty Project States**: Show clean empty or neutral states for projects without user content instead of placeholder or mock content
+- **No Mock Content Display**: Prevent system from displaying mock data, placeholder content, or default text/images for projects
+- **Project Content Persistence**: Ensure user-edited project content is permanently stored and always displayed as entered
+- Live preview and real-time updates for all content changes for authenticated owner only
+- Media upload controls that appear when clicking on images except the static profile image for authenticated owner only
+- Rich text editing toolbar for text elements accessible only to authenticated owner
+- **Strict Edit Indicators**: Use hover styling only for edit affordance, removing "Click to edit" text and pencil icons, visible only to authenticated owner in editor mode
+- **Custom Save Button Interface**: Implement dedicated "Save" button in editor mode that persists all pending changes to projects, content, lists, tags, contact information, project hover descriptions, project detailed descriptions, project page blocks, and image blocks globally
+- **Global LIFO Undo/Redo Interface**: Implement global Last-In, First-Out undo/redo system where all changes (add, edit, delete, reorder) including list, tag, project reordering, project hover description edits, project detailed description edits, project page block edits, image block operations, and contact information operations are properly integrated into a single stack, ensuring undo/redo works for every action in the correct chronological order
+- **Backend-Synchronized Interface**: Ensure saving, undo, and redo actions update the backend so all visitors see the latest state, not just the admin
+- **Stack-Based Undo/Redo Implementation**: Implement stack-based undo/redo functionality where the most recent action is undone first, working for all content changes including list, tag, project reordering, project hover description edits, project detailed description edits, project page block edits, image block operations, and contact information operations
+- **Complete Undo/Redo Implementation**: Implement comprehensive undo/redo functionality that properly reverts and reapplies all types of content changes including text edits, image uploads (except profile), button modifications, project operations, project reordering, project hover description edits, project detailed description edits, project page block edits, image block operations, list modifications, tag changes, contact information edits, and any other content changes
+- **Undo/Redo Button States**: Implement proper visual feedback for undo/redo buttons that become active when changes are made and show availability status
+- **Full Content History Navigation**: Enable navigation through complete edit history with proper state management for all content types including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information
+- **Instant Global Data Persistence**: All edits automatically save to the backend and persist across browser sessions and page reloads with instant global visibility
+- **Absolute UI Isolation**: All editing UI elements (hover outlines, edit indicators) strictly only visible in editor mode for authenticated owner and completely hidden for all other users under all circumstances
+- **Comprehensive Revision History Interface**: Implement complete revision history interface with browsing, preview, and restore capabilities, accessible only to authenticated owner
+- **Revision History Button Interface**: Dedicated "History" button or section in editor mode that opens comprehensive revision management interface
+- **Revision Browsing Interface**: Interface for browsing through all previous revisions with clear timestamps and content previews
+- **Revision Preview Interface**: Preview capability for any previous revision showing exactly how content appeared at that point in time
+- **Revision Restore Interface**: Functional "Restore" button for each revision that properly applies previous revisions and updates UI immediately
+- **Complete Revision Restoration**: Restore functionality works for all content types including text, images (except profile), buttons, projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, contact information, and any other editable elements
+- **Revision Comparison Interface**: Side-by-side comparison interface for different versions of individual elements
+- **Revision Metadata Display**: Display revision metadata including timestamps, content types changed, and revision descriptions
+- **Individual Element History Interface**: Interface for viewing edit history of individual components with detailed change tracking
+- **Revision Navigation Interface**: Navigation controls for moving through revision history with clear visual indicators
+- **Save Instance Revision Interface**: Interface for tracking and displaying each custom save operation as a revision entry
+- **Edit Instance Revision Interface**: Interface for tracking and displaying individual edit operations in revision history
+- **Autosave Interface**: Implement autosave functionality that automatically saves edits every 1-2 minutes with visual indicators
+- **Version Control Interface**: Provide interface for managing autosaved and manually saved versions with revision history
+- **Content Persistence Verification**: Verify that all content changes including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information are properly persisted and retrievable across sessions
+- **Error Recovery Mechanisms**: Implement comprehensive error recovery to handle and resolve content loading and editing failures
+- **Global State Synchronization**: Implement mechanisms to ensure all content changes including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information are immediately reflected in the global state and visible to all visitors without requiring authentication
+- **Public Content Updates**: Ensure all content changes including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information made by the authenticated owner are immediately visible to all public visitors without requiring them to refresh the page
+- **Universal Data Consistency**: Implement data consistency mechanisms that ensure all visitors see the same content including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information regardless of their authentication status
+- **Button Property Editing**: Implement comprehensive button editing interface that allows modification of text, styling, colors, and other properties directly in place
+- **Projects Section Display**: Display Projects section with title, subtitle, and responsive centered group grid of all saved project cards
+- **List and Tag Display**: Display bullet lists and tag groups in About Me and Contact sections with proper formatting and structure
+- **Static Contact Information Interface**: Display clean, professional contact information without form fields or submission functionality
+- **Contact Information Display Interface**: Show email, phone, location, and LinkedIn link with appropriate styling and interaction
+- **Clickable Contact Links Interface**: Implement clickable mailto and tel links for email and phone with proper formatting
+- **Professional Contact Layout Interface**: Clean, modern layout for contact information with easy copy/click access and left-aligned "Get In Touch" content and "What I Can Help With" section
+- **Contact Information Editing Interface**: Enable editing of contact information fields, labels, and properties through direct interaction when authenticated and in editor mode
+- **Streamlined Contact Layout Interface**: Remove the "Connect on LinkedIn" block and implement left-aligned layout for remaining contact content for a cleaner, more professional appearance
+- Content language: English
+
+### Backend Architecture
+- **Modular Backend Structure**: Organize Motoko backend code into feature-based modules for improved build performance and maintainability
+- **Access Control Module**: Separate module for Internet Identity authentication, principal verification, and authorization logic
+- **Project Management Module**: Dedicated module for all project-related operations including CRUD, ordering, and data isolation
+- **Project Page Module**: Dedicated module for individual project page management, content blocks, routing, and markdown support
+- **File Storage Module**: Separate module for handling image uploads, file serving, and media management
+- **Content Management Module**: Module for handling all editable content including lists, tags, and contact information
+- **Revision History Module**: Dedicated module for tracking, storing, and managing revision history and version control
+- **Undo/Redo Module**: Module for managing the global LIFO undo/redo stack and state management
+- **Data Persistence Module**: Module for handling data storage, retrieval, and consistency across all content types
+- **Data Migration Module**: Dedicated module for handling seamless data migration across deployments and version updates
+- **API Module**: Centralized module for all API endpoints and request handling
+- **Validation Module**: Module for data validation, sanitization, and integrity checks
+- **Error Handling Module**: Centralized error handling and recovery mechanisms
+- **Import/Export Management**: Ensure all module imports and exports are properly configured to maintain full functionality after refactoring
+- **Module Dependencies**: Organize module dependencies and interfaces for clean separation of concerns
+- **Type Definitions**: Organize shared types and interfaces across modules for consistency
+
+### Backend Technical Implementation
+- **Critical Data Serving Enhancement**: Implement robust data serving mechanisms that guarantee all saved content is available and accessible to the frontend, preventing blank page issues
+- **API Reliability Enhancement**: Ensure backend APIs consistently return all stored data without failures that could cause blank pages, with proper error handling and retry mechanisms
+- **Content Loading Verification**: Implement verification mechanisms to ensure all stored content is properly retrieved and served to prevent blank page problems
+- **Backend Error Recovery**: Implement comprehensive error recovery mechanisms to handle and resolve backend failures that could cause content loading issues
+- **Data Consistency Assurance**: Ensure data consistency across all operations to prevent content corruption or loss that could result in blank pages
+- **Backend Stability Enhancement**: Ensure backend operations are stable and don't cause failures that could result in blank pages or content loading issues
+- **API Response Consistency**: Ensure backend APIs always return properly formatted responses even when data is empty or missing
+- **Data Integrity Verification**: Maintain data integrity and ensure no content becomes inaccessible due to backend issues
+- **Robust Data Retrieval**: Implement robust data retrieval mechanisms that handle edge cases and prevent API failures
+- **Data Serving Reliability**: Implement reliable data serving mechanisms that prevent failures and ensure consistent content delivery
+- **Instant Global Content Persistence**: Ensure all stored content and user data are immediately saved and served globally to all visitors across all devices without delay
+- **Real-Time Content Synchronization**: Implement real-time synchronization of all content changes to ensure instant global visibility
+- **Immediate Universal Updates**: All content changes must be immediately reflected in the backend and served to all visitors without delay, regardless of authentication status
+- **Cross-Device Data Consistency**: Ensure that content changes are immediately available across all devices and to all visitors without delay
+- **Static Profile Image Serving**: Serve the static profile image from "https://i.imgur.com/4NAe5Nx.png" without any upload or editing functionality
+- **No Profile Image Storage**: Remove all backend functionality for storing, uploading, or managing profile images
+- **Complete Content Loading**: Provide APIs that reliably serve all portfolio content, images, and editable elements to prevent blank pages
+- **Image Serving Stability**: Ensure all uploaded images except the static profile image load reliably without causing content loading issues
+- **Image Upload Backend Stability**: Implement robust image upload handling that prevents data corruption
+- **Data Persistence Verification**: Verify that all data changes are properly persisted and retrievable across sessions
+- **Seamless Data Migration Implementation**: Implement comprehensive data migration system that automatically preserves all existing content, edits, and revision history during canister upgrades and deployments
+- **Persistent Storage Architecture**: Design backend storage architecture that survives canister upgrades and deployments without data loss
+- **Real-Time Backend Write Operations**: Ensure all content edits are immediately written to persistent backend storage as they are made, eliminating any temporary or draft-only storage
+- **Deployment-Safe Data Storage**: Implement data storage mechanisms that guarantee all user content and edits survive deployments and version updates
+- **Automatic Migration Logic**: Implement automatic data migration logic that transfers all existing data when deploying new versions of the application
+- **Zero Data Loss Architecture**: Design backend architecture that prevents any data loss during deployments, upgrades, or version changes
+- **Backend-First Content Persistence**: All content changes are immediately written to backend persistent storage before being reflected in the frontend
+- **Persistent Edit History Storage**: Store all revision history and undo/redo stack data in persistent backend storage that survives deployments
+- **Continuous Data Availability**: Ensure all content remains available and accessible throughout deployment processes without interruption
+- **Migration Verification System**: Implement verification mechanisms to confirm successful data migration and content preservation during deployments
+- **Rollback Protection System**: Ensure data migration system can handle rollbacks and version changes without losing user content or edits
+- **Data Integrity Across Deployments**: Maintain data integrity and consistency across all deployment and migration operations
+- Store all editable content with element-level versioning (text, images except profile, videos, buttons, projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, contact information, etc.)
+- Handle file uploads for images and videos except profile image with immediate serving capability
+- Manage revision history for individual page elements and components
+- **Principal-Based Authentication**: Authenticate owner using Internet Identity with strict principal verification and authorization
+- **Secure API Access**: Ensure all editing APIs are protected by Internet Identity authentication with principal matching
+- **Immediate Admin Access Backend**: After successful Internet Identity authentication, backend immediately enables all admin functionality without requiring any additional steps, toggles, or sequences
+- **Reliable Admin Controls Backend**: Backend provides immediate access to all admin functionality upon authentication across all browsers and devices
+- **Direct Editor Access Backend**: Backend grants immediate access to editor mode and all editing capabilities for authenticated owners without any hidden sequences or additional requirements
+- **Cross-Browser Admin Consistency Backend**: Backend ensures admin controls are available consistently and immediately after login across all browsers and devices
+- **No Additional Steps Backend**: Backend requires only Internet Identity authentication to access all admin functionality
+- **No Profile Setup Backend**: Never require or prompt for profile setup data, removing all profile setup dialog logic and requirements
+- Provide APIs for real-time content updates and retrieval with authentication verification
+- Store media files except profile image and serve them instantly to frontend
+- Track edit timestamps and revision metadata for each individual element
+- Support atomic updates for individual page components
+- **Project Page Backend Support**: Implement backend support for individual project pages with content blocks, routing, data management, and markdown content storage
+- **Project Page Content Block Storage**: Store and manage various content block types for project pages including text sections, image carousels, and rich media elements with markdown support
+- **Markdown Content Storage**: Store and serve markdown content for project pages with proper parsing and rendering support
+- **Project Page Routing Backend**: Provide backend support for project page routing and URL management
+- **Project Card Hover Backend**: Support project card hover descriptions with proper data storage and serving
+- **Clickable Project Card Backend**: Implement backend support for project card navigation with proper ID matching and state management
+- **Project ID Matching Backend**: Implement robust project ID matching system to prevent "Project Not Found" errors when navigating between project cards and project pages
+- **Reliable Project Navigation Backend**: Ensure backend properly links project IDs and state to enable reliable navigation from project cards to project pages
+- **Enhanced Project Card Backend**: Support project card hover descriptions and detailed descriptions with proper data storage and serving
+- **Dual Description Backend Storage**: Store and serve both hover description (plain text) and detailed description (markdown) fields separately for each project
+- **Hover Description Backend**: Store and serve project card hover description data as plain text with proper versioning and editing support
+- **Detailed Description Backend**: Store and serve project detailed description data with markdown support, proper versioning, and editing capabilities
+- **Description Field Separation Backend**: Ensure backend storage and serving keeps hover descriptions and detailed descriptions completely separate
+- **Plain Text Hover Backend**: Store hover descriptions as plain text without any markdown processing or formatting
+- **Markdown Detailed Backend**: Store and process detailed descriptions with full markdown support and rendering capabilities
+- **Independent Description Updates Backend**: Handle updates to either description field independently without affecting the other field
+- **Description Field Isolation Backend**: Prevent cross-contamination between hover description and detailed description fields in storage and serving
+- **Back to Portfolio Navigation Backend**: Provide backend support for "Back to Portfolio" navigation functionality with proper section targeting
+- **Comprehensive Project Page Backend**: Implement backend support for full editing of all separate project page details including text, images, carousels, and other content elements with complete Edit Mode Active integration
+- **Image Block Backend Support**: Implement comprehensive backend support for image blocks on project pages with upload functionality, storage management, and serving capabilities
+- **Image Block Upload Backend**: Handle image uploads for image blocks with proper file validation, storage, and immediate serving capability
+- **Image Block Storage Backend**: Store and manage uploaded images for image blocks with proper persistence and retrieval mechanisms
+- **Image Block Serving Backend**: Serve uploaded images for image blocks reliably with proper formatting and delivery
+- **Image Block Persistence Backend**: Ensure all uploaded images in image blocks are properly stored in persistent backend storage and survive deployments
+- **Image Block Integration Backend**: Fully integrate image block backend functionality with the global save, undo/redo, and revision history system like all other content blocks
+- **Image Block Editor Backend**: Handle image block editing operations with proper authentication verification and data management
+- **Image Block Content Management Backend**: Ensure image block backend works seamlessly with all other content block backend systems and supports the same persistence mechanisms
+- **Instant Global Data Persistence**: Ensure all in-place edits are immediately saved to the backend and served globally to all visitors without delay
+- **Custom Save Operation Backend**: Process dedicated custom "Save" operations that persist all pending changes to projects, content, lists, tags, contact information, project hover descriptions, project detailed descriptions, project page blocks, and image blocks globally, ensuring all edits are saved for every visitor
+- **Unsaved Changes Backend Tracking**: Track unsaved changes state for project cards, content sections, project pages, image blocks, and contact information and clear this state when custom "Save" is processed
+- **Global LIFO Stack Backend**: Implement global Last-In, First-Out undo/redo stack storage where all changes (add, edit, delete, reorder) including list, tag, project reordering, project hover description edits, project detailed description edits, project page block edits, image block operations, and contact information operations are stored in proper chronological order for correct undo/redo functionality
+- **Backend-Synchronized Operations**: Ensure saving, undo, and redo operations update the backend data so all visitors see the latest state, not just the admin
+- **Complete Edit State Management**: Store and manage complete edit states for comprehensive undo/redo functionality with proper state tracking for all content types including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information
+- **Stack-Based Edit History Storage**: Store edit history in proper stack order to support stack-based undo/redo where the most recent action is undone first
+- **Full Content History Storage**: Store complete edit history for all content types including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information to support comprehensive undo/redo operations
+- **List and Tag Data Storage**: Store bullet list and tag group data with proper structure, ordering, and versioning to support full editing capabilities
+- **List Item Management Backend**: Handle individual list item and tag operations (add, remove, edit, reorder) with proper data validation and persistence
+- **List Structure Backend**: Maintain proper list data structure and formatting while supporting full content editing operations
+- **List Reorder Backend**: Handle drag-and-drop reordering operations for list items and tags with proper order persistence and data integrity
+- **List Edit History Backend**: Store complete edit history for all list and tag operations to support comprehensive undo/redo functionality
+- **Comprehensive Revision History Backend**: Store complete revision history for all content types with timestamps, metadata, and full content snapshots
+- **Save Instance Revision Storage**: Create and store new revision entries for each custom save operation with complete content state and timestamps
+- **Edit Instance Revision Storage**: Create and store revision entries for individual edit operations with detailed change information and timestamps
+- **Revision Metadata Storage**: Store comprehensive revision metadata including timestamps, content types changed, revision descriptions, and change summaries
+- **Individual Element Revision Storage**: Store revision history for each individual component (text, image except profile, button, project, project order, project hover description, project detailed description, project page block, image block, list, tag, contact information, etc.) with detailed change tracking
+- **Revision Comparison Backend**: Support side-by-side comparison of different versions with proper data retrieval and formatting
+- **Revision Restoration Backend**: Support restoration of any previous revision with complete content state restoration and proper data updates
+- **Complete Revision Restoration Support**: Backend support for restoring all content types including text, images (except profile), buttons, projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, contact information, and any other editable elements
+- **Global Revision Updates Backend**: Ensure revision restorations update the live site data for all visitors immediately with proper global synchronization
+- **Revision Browsing Backend**: Provide APIs for browsing through all previous revisions with proper pagination and filtering capabilities
+- **Revision Preview Backend**: Support preview of any previous revision with complete content state retrieval
+- **Revision State Management Backend**: Track and manage revision states with proper navigation and state tracking capabilities
+- **Authentication-Protected Revision APIs**: All revision history APIs require valid Internet Identity authentication with principal verification
+- **Instant Global Revision Synchronization**: All revision changes and restorations are immediately synchronized and served globally to all visitors without delay
+- **Comprehensive Revision Coverage Backend**: Revision system backend covers all editable content including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, contact information, text, images (except profile), buttons, and any other content modifications
+- **Revision History Integration Backend**: Integrate revision history system with global undo/redo system and custom save functionality for comprehensive version control
+- **Batch Save Operations**: Support saving all pending changes at once when custom "Save" button is used, with authentication verification
+- **Data Validation**: Implement comprehensive data validation to prevent corruption and ensure data integrity
+- **Transaction Management**: Use proper transaction management to ensure data consistency during complex operations
+- **Backup and Recovery**: Implement backup mechanisms to prevent data loss and enable recovery from failures
+- **Authentication-Protected APIs**: All editing, content management, and administrative APIs require valid Internet Identity authentication with principal verification
+- **Public Content Serving**: Ensure all content is served to all visitors regardless of authentication status, with all changes made by the authenticated owner immediately visible to everyone
+- **Global Content Availability**: Implement content serving mechanisms that make all owner-created content immediately available to all public visitors without authentication requirements
+- **Universal Data Access**: Ensure all stored content and media except profile image are accessible to all visitors through public APIs that do not require authentication
+- **Button Data Storage**: Store button text, styling, and property data with proper versioning and persistence
+- **Button Edit Backend**: Handle button editing operations with proper data validation and persistence, with authentication verification
+- **Project Management Backend**: Implement project management backend that supports unlimited project creation with complete data isolation and zero cross-project interference
+- **Unlimited Project Creation Backend**: Support creating unlimited blank project cards with independent default content and data isolation to completely prevent overwriting or deletion of existing cards
+- **Absolute Project Isolation Backend**: Ensure each project card maintains complete independence with no data copying or interference between cards through data isolation mechanisms
+- **Zero Cross-Project Contamination Backend**: Implement backend logic that completely prevents any project from affecting another project's data, images, or properties
+- **Reliable Project Addition Backend**: Support adding unlimited projects in sequence without requiring editing or saving of previous cards, with guaranteed persistence until explicit deletion
+- **Independent Project Editing Backend**: Support editing of any project card without affecting any other project card through data management
+- **Parallel Project Management Backend**: Support simultaneous editing of multiple project cards with complete data isolation and no interference
+- **Enhanced Project Data Storage**: Store project data including title, hover description, detailed description, image, tags, URL, and order with proper versioning and persistence
+- **Project CRUD Operations**: Handle project create, read, update, and delete operations with proper data validation and persistence, with authentication verification
+- **Project URL Storage**: Store optional URL/link field for each project with proper validation and serving
+- **Dual Project Description Storage**: Store both hover description (plain text) and detailed description (markdown) fields separately for each project with proper versioning
+- **Hover Description Storage**: Store project card hover descriptions as plain text with proper versioning and editing support
+- **Detailed Description Storage**: Store project detailed descriptions with markdown support, proper versioning, and editing capabilities
+- **Description Field Backend Separation**: Ensure backend storage and APIs keep hover descriptions and detailed descriptions completely separate
+- **Plain Text Hover Storage**: Store and serve hover descriptions as plain text without any markdown processing
+- **Markdown Detailed Storage**: Store and serve detailed descriptions with full markdown support and processing capabilities
+- **Independent Description Backend Updates**: Handle updates to either description field independently without affecting the other field
+- **Description Field Backend Isolation**: Prevent cross-contamination between hover description and detailed description fields in all backend operations
+- **Multi-line Description Storage**: Store both description fields with support for multi-line text and consistent formatting with reliable text wrapping behavior
+- **Project Order Management**: Store and manage project ordering with support for drag-and-drop reordering that immediately persists changes and serves the new order globally to all visitors
+- **Immediate Project Order Backend**: Handle project reordering operations with immediate backend persistence and global synchronization without requiring separate save actions
+- **Global Project Order Backend**: Ensure project card reordering is immediately stored and served globally to all visitors with the new order maintained across all sessions and devices
+- **Flawless Project Reorder Backend**: Handle drag-and-drop reordering operations with proper order persistence, and data integrity without any glitches or failures
+- **Complete Project Undo/Redo Backend**: Store all project operations including reordering, hover description edits, and detailed description edits in the global undo/redo stack with proper integration and correct stack-based functionality
+- **Project Bulk Operations**: Support bulk operations for managing multiple projects with proper transaction handling
+- **Project Data Integrity**: Ensure project data integrity and prevent data corruption or cross-project data contamination through isolation
+- **Instant Global Project Persistence**: Ensure all project changes including reordering, hover description edits, and detailed description edits are immediately saved and served globally to all visitors without delay
+- **User-Only Project Content Storage**: Store only user-provided project content, never serve mock data, placeholders, or default content
+- **Clean Empty Project Handling**: Handle projects without user content by serving clean empty or neutral states instead of placeholder or mock content
+- **No Mock Content Backend**: Prevent backend from serving mock data, placeholder content, or default text/images for projects
+- **Project Content Persistence Backend**: Ensure user-edited project content is permanently stored and always served as entered by the user
+- **Contact Information Data Storage**: Store contact information including email, phone, location, and LinkedIn link with proper versioning for editing capabilities
+- **Contact Information Edit Backend**: Handle contact information editing operations including field modifications, label changes, and property updates with authentication verification
+- **Contact Information Undo/Redo Backend**: Store contact information editing operations in the global undo/redo stack with proper integration
+- **Contact Information Revision Backend**: Store contact information changes in the revision history system with proper tracking and restoration capabilities
+- **Static Contact Information Backend**: Serve contact information as static data without form processing or submission functionality
+- **Autosave Backend**: Implement autosave functionality that automatically saves edits every 1-2 minutes with proper revision tracking
+- **Version Control Backend**: Store and manage both autosaved drafts and manually saved versions with comprehensive revision history
+- **Complete Content Edit Backend**: Handle all content editing operations with comprehensive data validation and persistence for all content types including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information
+
+### Content Management
+- Static content structure with Terry Brutus branding throughout
+- Contact information: email "terrbrutus@gmail.com", phone "(212) 603-9163", location "Arlington, VA", LinkedIn "https://www.linkedin.com/in/terrybrutus/"
+- Contact section subtitle: "Ready to create exceptional learning experiences together? I'd love to hear about your goals"
+- All content editable through direct click-to-edit interface for authenticated owner only
+- Element-level content management with individual revision tracking
+- **Enhanced Profile Image Management**: Profile image displays the static image from "https://i.imgur.com/4NAe5Nx.png" at a larger size with proper spacing to prevent text cutoff, and is never editable or replaceable
+- **Non-Editable Profile Image**: Profile image cannot be uploaded, edited, or replaced by any user including the authenticated owner
+- **Projects Section Structure**: Projects section displays title "Featured Projects" and subtitle "A showcase of learning experiences designed to engage, educate, and inspire" featuring a responsive centered group grid of project cards displaying all saved projects
+- **Traditional Project Card Design**: Project cards use the traditional design as shown in the reference images, filling the entire card area with proper layout and styling
+- **Full Card Coverage**: Project cards fill the complete card area with proper image display and content layout matching the reference design
+- **Centered Project Grid Management**: Project cards are always centered as a group regardless of the number of cards with responsive layout that maintains visual balance across all screen sizes
+- **Functional Project Card Hover Management**: Project cards feature fully functional hover overlays that display the project summary text when hovered over or tapped, providing quick preview of project content with proper animation and text display
+- **Working Hover Animation Management**: Hover overlays appear smoothly on mouseover/tap with correct animation timing and visual effects
+- **Clickable Project Card Management**: Project cards are clickable and reliably navigate to individual project pages for detailed viewing
+- **Project Card Navigation Management**: Project cards link to individual project pages with proper ID matching and state management to prevent "Project Not Found" errors
+- **Responsive Project Grid Management**: Project cards display in a responsive grid layout that adapts to different screen sizes while maintaining visual balance
+- **Individual Project Page Management**: Each project has its own dedicated page with customizable content blocks, routing, and markdown support
+- **Project Page Content Block Management**: Project pages support various content block types including text sections, image carousels, and rich media elements with full markdown formatting
+- **Markdown Content Management**: Project page content blocks support full markdown syntax including headers, emphasis, tables, lists, links, code blocks, and other formatting options
+- **Clean Markdown List Management**: Ensure markdown bullet lists display only a single bullet per item, eliminating double bullets caused by overlapping list styles throughout all markdown-rendered content
+- **Consistent Markdown Styling Management**: Apply consistent CSS styling to all markdown-rendered lists to prevent duplicate bullets and ensure clean, professional appearance
+- **Project Page Navigation Management**: Project pages are accessible through clickable project cards with proper project routing
+- **Back to Portfolio Navigation Management**: "Back to Portfolio" button on project pages navigates directly to the "Projects" section on the main portfolio page with proper scroll positioning
+- **Comprehensive Project Page Content Management**: Allow full editing of all separate project page details including text, images, carousels, and other content elements with complete Edit Mode Active integration
+- **Image Block Content Management**: Image blocks on project pages support full image upload functionality with intuitive upload UI, proper image display, and persistent storage
+- **Image Block Upload Management**: When adding or editing image blocks, provide clear and accessible upload controls that allow users to select and upload actual images
+- **Image Block Display Management**: Uploaded images in image blocks display correctly with proper sizing, formatting, and layout within the project page content
+- **Image Block Persistence Management**: All uploaded images in image blocks are properly stored in the backend and persist across sessions and deployments
+- **Image Block Integration Management**: Image block functionality is fully integrated with the global save, undo/redo, and revision history system like all other content blocks
+- **Image Block Editor Management**: Image blocks are editable when authenticated and in editor mode, allowing upload, replacement, and removal of images
+- **Image Block Content System Management**: Image blocks work seamlessly with all other content blocks and support the same editing capabilities and persistence mechanisms
+- **Project Management**: Support for unlimited project creation with complete data isolation and zero cross-project interference, ensuring each project maintains complete independence
+- **Unlimited Project Addition**: Support adding unlimited blank project cards in sequence without requiring editing or saving of previous cards, with each card persisting until explicitly deleted
+- **Absolute Project Independence**: Each project card maintains complete independence with no data copying or interference between cards through data isolation
+- **Zero Cross-Project Interference**: Completely prevent any project from affecting another project's data, images, or properties through data management
+- **Reliable Project Creation**: Ensure project creation that prevents all bugs and data corruption when adding unlimited projects
+- **Independent Project Editing**: Enable editing of any project card without affecting any other project card through robust data isolation
+- **Parallel Project Management**: Support simultaneous editing of multiple project cards with complete data isolation and no interference
+- **Enhanced Project Data Structure**: Each project contains title, hover description, detailed description, image, tags, optional URL, and order information
+- **Dual Description Management**: Each project includes two separate description fields - hover description and detailed description
+- **Hover Description Management**: Plain text field for project card hover overlay that displays on card hover without any markdown formatting
+- **Detailed Description Management**: Markdown-formatted field for project pages that supports full markdown syntax including headers, emphasis, tables, lists, links, and other formatting
+- **Description Field Separation Management**: Hover description and detailed description are completely separate fields with independent editing and storage
+- **Plain Text Hover Display Management**: Hover overlay displays only plain text without any markdown formatting, ensuring clean presentation
+- **Markdown Detailed Display Management**: Project pages display detailed description with full markdown rendering including headers, emphasis, tables, lists, links, and other formatting
+- **Independent Description Update Management**: Editing either description field updates only its intended display area without affecting the other field
+- **Description Field Isolation Management**: Markdown formatting never appears in hover overlays, maintaining clean plain text display while supporting full markdown on project pages
+- **Centered Project Grid Layout**: Responsive grid layout with centered group positioning where project cards are always centered as a group regardless of the number of cards
+- **Project URL Management**: Optional URL/link field for each project that makes cards clickable and navigates to individual project pages when populated
+- **Multi-line Description Management**: Both description fields support multi-line text with consistent wrapping within cards and reliable formatting behavior
+- **Project Reordering**: Drag-and-drop reordering capability with functionality that immediately updates the order and saves globally for all visitors without requiring separate save actions
+- **Immediate Project Order Management**: Project card reordering immediately persists changes and serves the new order globally to all visitors across all devices
+- **Global Project Order Management**: Project reordering changes are immediately visible to all visitors without delay, ensuring consistent order across all sessions and devices
+- **Flawless Reorder Management**: Provide completely consistent drag-and-drop experience with functionality without any glitches, failures, or data corruption
+- **Complete Project Undo/Redo Management**: All project operations including reordering, hover description edits, and detailed description edits are properly integrated into the global undo/redo system and can be undone/redone like any other content change with correct chronological order
+- **User-Only Project Content Management**: Project cards display only user-provided content, never mock data, placeholders, or default content
+- **Clean Empty Project Management**: Projects without user content show clean empty or neutral states instead of placeholder or mock content
+- **No Mock Data Override Management**: System never displays mock data, placeholder content, or default text/images for projects
+- **Project Content Persistence Management**: User-edited project content is permanently stored and always displayed as entered
+- **Reliable Project Thumbnail Upload Management**: Project thumbnail image uploads work reliably on the first attempt with immediate visual feedback and comprehensive error handling
+- **Persistent Content Management**: All content changes including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information are immediately written to persistent backend storage and survive deployments
+- **Migration-Safe Content Management**: Content management system designed to automatically preserve all user content and edits across deployments and version updates
+- **Real-Time Backend Content Persistence**: All content edits are immediately written to the backend's persistent storage system as they are made
+- **Deployment-Safe Content Storage**: All content management operations write directly to persistent backend storage that survives canister upgrades and deployments
+- **Zero Data Loss Content Management**: Content management system guarantees no data loss during deployments, upgrades, or version changes
+- **List and Tag Content Management**: Comprehensive bullet list and tag group management system with add, edit, delete, and reorder capabilities restricted to authenticated owner
+- **List Structure Management**: Maintain proper list formatting and structure while allowing full content editing
+- **List Item Management**: Individual list item and tag editing with direct manipulation capabilities
+- **List Reorder Management**: Drag-and-drop reordering capability for list items and tags within their respective containers
+- **About Me Lists**: Bullet lists and tag groups in the About Me section are fully editable with comprehensive management capabilities
+- **Contact Lists**: Bullet lists and tag groups in the Contact section are fully editable with comprehensive management capabilities
+- **Owner-Only Content Management**: All content management capabilities are exclusively available to the authenticated owner
+- **Instant Global Content Synchronization**: All content changes including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information are immediately synchronized with the backend and visible to all visitors across all devices without delay
+- **Public Content Visibility**: All content changes including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information made by the authenticated owner are immediately visible to all public visitors without requiring authentication or page refresh
+- **Button Content Management**: All buttons are fully editable with text, styling, and property management capabilities restricted to authenticated owner
+- **Custom Save Content Management**: Dedicated custom save functionality that persists all pending changes to projects, content, lists, tags, contact information, project hover descriptions, project detailed descriptions, project page blocks, and image blocks globally for every visitor
+- **Unsaved Changes Content Management**: Accurate tracking of unsaved changes on project cards, content sections, project pages, image blocks, and contact information that is cleared when content is saved using the custom Save button
+- **Global LIFO Content Management**: All content changes including list, tag, project reordering, project hover description edits, project detailed description edits, project page block edits, image block operations, and contact information operations are managed through a global Last-In, First-Out system for proper undo/redo functionality in correct chronological order
+- **Backend-Synchronized Content Management**: All save, undo, and redo operations update the backend to ensure all visitors see the latest state
+- **Comprehensive Revision History Content Management**: Complete revision history management for all content types with browsing, preview, and restore capabilities
+- **Fixed Revision History Modal Management**: Revision history modal with proper text containment, scrollable content, and overflow handling to ensure all text stays within modal boundaries and remains fully readable
+- **Save Instance Revision Management**: Each custom save operation creates new revision entries with timestamps and complete content snapshots
+- **Edit Instance Revision Management**: Each individual edit operation is tracked in revision history with detailed change information
+- **Revision Restoration Content Management**: Restore any previous revision with complete content state restoration and immediate global updates
+- **Individual Element Revision Management**: Track and manage revision history for each individual component with detailed change tracking
+- **Revision Comparison Content Management**: Compare different versions of individual elements side-by-side with proper formatting
+- **Revision Metadata Management**: Manage revision metadata including timestamps, content types changed, and revision descriptions
+- **Autosave Content Management**: Automatic saving of all content changes including list, tag, project reordering, project hover description edits, project detailed description edits, project page block edits, image block operations, and contact information modifications every 1-2 minutes with revision history tracking
+- **Version Control Content Management**: Management of both autosaved and manually saved versions with comprehensive revision tracking
+- **Complete Content Management**: Comprehensive content management system that handles all content types including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information with proper persistence and global synchronization
+- **Static Contact Information Management**: Management of clean, professional contact information display without form functionality
+- **Contact Information Field Management**: Management of contact information fields including email, phone, location, and LinkedIn with proper formatting and interaction
+- **Contact Information Edit Management**: Enable editing of contact information fields, labels, and properties through direct interaction when authenticated and in editor mode
+- **Contact Information Display Management**: Ensure contact information is clearly visible and easy to copy or click with professional presentation
+- **LinkedIn Link Management**: Management of LinkedIn profile link as part of the contact information display
+- **Contact Information Validation Management**: Proper validation and formatting for contact information fields during editing
+- **Streamlined Contact Layout Management**: Remove the "Connect on LinkedIn" block and implement left-aligned layout for "Get In Touch" content and "What I Can Help With" section for a cleaner, more professional appearance
+
+## User Experience
+
+### Regular Visitors
+- **Guaranteed Portfolio Access**: All portfolio content and sections including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information load and display correctly without blank pages or missing content
+- **Reliable Content Viewing**: All user-created content, images, and editable content including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information render as expected with no data loss or hidden elements
+- **Consistent Page Loading**: Portfolio always loads completely with all content including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information visible and accessible
+- **No Blank Page Issues**: Visitors experience consistent, reliable page loading with all content including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information properly displayed
+- **Graceful Loading States**: Display appropriate loading indicators and error messages instead of blank pages when content is loading or fails to load
+- **Error Recovery Experience**: Experience graceful error recovery with fallback content or error messages instead of blank pages when content loading fails
+- **Interactive Constellation Background Experience**: Enjoy dynamic constellation background with 50-80 randomly positioned stars of varying sizes and brightness, featuring glowing and pulsing animation effects
+- **Cursor-Based Line Drawing Experience**: Experience smooth, anti-aliased lines connecting stars within 150px of cursor or touch position with distance-based opacity fading
+- **Star Brightness Enhancement Experience**: Watch connected stars brighten when linked by constellation lines as cursor moves
+- **Multi-Device Constellation Interaction**: Experience constellation effect on both desktop (mouse cursor) and mobile devices (touch position tracking)
+- **Dark Space Background Experience**: Enjoy dark space-themed background that provides high contrast for professional content presentation
+- **Dynamic Constellation Pattern Experience**: Experience evolving constellation patterns that change as cursor moves through different areas of the screen
+- **WCAG Accessible Constellation**: Experience constellation effect that maintains high text contrast and WCAG accessibility standards with all UI elements remaining fully readable
+- **Performance Optimized Background**: Experience smooth 60fps constellation animations that don't interfere with page loading, scrolling, or content interaction
+- **Responsive Constellation Experience**: Experience constellation effect that adapts seamlessly to all screen sizes and orientations while maintaining visual quality
+- **Non-Intrusive Constellation Design**: Enjoy constellation effect that enhances the design without interfering with content readability or navigation functionality
+- **Smooth Animation Transitions**: Experience smooth transitions for star connections and disconnections as cursor moves across the screen
+- **Touch Event Constellation**: Experience constellation effect on mobile devices through touch interaction that tracks finger position
+- **Visual Depth Effects**: Experience visual depth through varying star sizes, brightness, and connection line weights in the constellation
+- **Enhanced Profile Image Viewing**: Profile image displays at a larger size with proper spacing to ensure the name "Terry Brutus" is never cut off beneath the image
+- **Traditional Project Card Experience**: Experience project cards using the traditional design as shown in the reference images, filling the entire card area with proper layout and styling
+- **Full Card Coverage Experience**: Project cards fill the complete card area with proper image display and content layout matching the reference design
+- **Functional Project Card Hover Experience**: Project cards feature fully functional hover overlays that display the project summary text when hovered over or tapped, providing quick preview of project content with proper animation and text display
+- **Working Hover Animation Experience**: Experience hover overlays that appear smoothly on mouseover/tap with correct animation timing and visual effects
+- **Clickable Project Card Experience**: Project cards are clickable and reliably navigate to individual project pages for detailed viewing
+- **Project Card Navigation Experience**: Project cards link to individual project pages with proper ID matching and state management, preventing "Project Not Found" errors
+- **Responsive Project Grid Experience**: Project cards display in a responsive grid layout that adapts to different screen sizes while maintaining visual balance
+- **Centered Project Grid Experience**: Project cards display in a responsive centered group layout that maintains visual balance across all devices and screen sizes
+- **Individual Project Page Access**: Access dedicated project pages for each project with customizable content, rich media elements, and markdown-formatted content
+- **Markdown Content Viewing**: View rich, formatted content on project pages with proper rendering of headers, emphasis, tables, lists, links, and other markdown elements
+- **Clean Markdown List Viewing**: Experience markdown bullet lists that display only a single bullet per item, with clean and consistent formatting throughout all markdown-rendered content
+- **Consistent Markdown Styling Experience**: View all markdown-rendered lists with consistent styling that prevents duplicate bullets and ensures professional appearance across all markdown content
+- **Detailed Description Viewing**: View project detailed descriptions on project pages with full markdown formatting including headers, emphasis, tables, lists, links, and other syntax
+- **Markdown Rendering Experience**: Experience proper markdown rendering on project pages with rich formatting while hover overlays remain clean plain text
+- **Image Block Viewing Experience**: View uploaded images in image blocks on project pages with proper display, sizing, and formatting
+- **Image Block Content Experience**: Experience rich visual content through image blocks that display uploaded images correctly within project page layouts
+- **Back to Portfolio Navigation**: Use "Back to Portfolio" button on project pages to navigate directly to the "Projects" section on the main portfolio page with proper scroll positioning
+- **Instant Global Content Access**: All portfolio content and sections including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information load and display the latest updates made by the owner immediately, ensuring visitors always see the most current version without delay
+- **Real-Time Content Updates**: All content changes including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information made by the owner are instantly visible to all visitors across all devices without requiring page refresh
+- **Cross-Device Consistency**: Content including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information appears consistently across all devices and browsers, reflecting the latest changes made by the owner immediately
+- **Static Profile Image Display**: Profile image displays the static image from "https://i.imgur.com/4NAe5Nx.png" as a larger circular avatar with enhanced spacing, visible to all visitors and never changing
+- **Deployment-Safe Content Access**: All content including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information remains accessible and up-to-date across deployments and version updates without interruption
+- **Migration-Transparent Experience**: Visitors experience seamless access to all content without any disruption during backend deployments or data migrations
+- Visitors can scroll through the portfolio sections with engaging animations that replay on each view
+- Clear navigation with prominent GIF logo and content hierarchy featuring Terry Brutus branding
+- **Proper Layout**: Navigation bar does not overlap or cover the profile image, ensuring clean visual presentation with enhanced spacing
+- **Smooth Section Navigation**: When clicking "View My Work" or Projects navigation button, page smoothly scrolls to position section headers just below the fixed navigation bar for optimal visibility
+- Professional presentation suitable for potential clients or employers with modern interactive constellation background
+- Fast loading times and smooth interactions
+- Enhanced engagement through repeating animations on scroll and dynamic constellation background
+- **Completely Clean Interface**: No login or editor controls visible by default on page load
+- GIF logo appears non-interactive without pointer cursor styling to maintain hidden functionality
+- **Absolutely No Editor Visibility**: No editing UI elements (outlines, badges, indicators, "Click to edit" text, pencil icons, hover effects) visible to regular visitors under any circumstances
+- **Zero Editor Visibility**: Regular visitors have absolutely no access to or visibility of any editing features, UI elements, or administrative controls
+- **Live Content Updates**: All content changes including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information made by the owner are immediately reflected for all visitors without requiring page refresh or reload
+- **Universal Content Consistency**: All visitors see the same up-to-date content including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information regardless of when they visit or from which device
+- **Clean Projects Display**: Projects section displays title, subtitle, and responsive centered group grid of all saved project cards with professional presentation in the correct order
+- **Consistent Project Order**: Project cards display in the same order for all visitors, reflecting the latest ordering changes made by the owner immediately
+- **Functional Project Card Hover Interaction**: Experience fully functional hover overlays on project cards that display project summary text for quick content preview with proper animation and text display
+- **Working Hover Animation Interaction**: Experience hover overlays that appear smoothly on mouseover/tap with correct animation timing and visual effects
+- **Project Page Experience**: Access individual project pages with rich content blocks, media elements, customized layouts, and markdown-formatted content
+- **Clean List Display**: Bullet lists and tag groups in About Me and Contact sections display with proper formatting and professional presentation
+- **Clickable Project Cards**: Project cards are clickable and navigate to individual project pages for detailed viewing
+- **Smart Project Navigation**: Project card clicks navigate to dedicated project pages with unique content and layouts
+- **Projects Navigation Button**: Use "Projects" button in navigation bar to navigate directly to the Projects section on the main portfolio page
+- **Standard Button Navigation**: Projects navigation appears as a standard button without dropdown arrow and scrolls to the Projects section
+- **Proper Text Display**: Project descriptions and list content display with consistent text wrapping and multi-line support within their containers
+- **User-Only Project Content Viewing**: Project cards display only user-provided content, never mock data, placeholders, or default content
+- **Clean Empty Project States**: Projects without user content show clean empty or neutral states instead of placeholder or mock content
+- **No Mock Content Display**: Never see mock data, placeholder content, or default text/images for projects
+- **Professional Contact Information Display**: Clean, professional display of contact information including email, phone, location, and LinkedIn link without form elements
+- **Easy Contact Access**: Contact information is clearly visible and easy to copy or click with proper formatting
+- **Clickable Contact Links**: Email and phone links are clickable for easy access via mailto and tel functionality
+- **LinkedIn Access**: LinkedIn profile link is displayed as part of the contact information
+- **Static Contact Experience**: Contact section provides clean information display without form submission or processing functionality
+- **Streamlined Contact Layout**: Experience clean, left-aligned layout for "Get In Touch" content and "What I Can Help With" section without the "Connect on LinkedIn" block for a more professional appearance
+
+### Owner Experience
+- **Guaranteed Content Access**: All saved content and editable elements including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information load and display correctly in both viewing and editing modes
+- **Complete Data Visibility**: All user-created content, uploaded images, and edited content including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information appear as expected with no data loss or rendering issues
+- **Reliable Editor Experience**: Editor mode always loads with all content including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information accessible and editable without blank pages or missing elements
+- **No Blank Page Issues**: Owner experiences consistent, reliable page loading in both viewing and editing modes with all content including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information properly displayed
+- **Content Recovery**: Ability to recover from any content loading issues with proper error handling and fallback mechanisms
+- **Stable Editing Experience**: All editing features including project management, project reordering, project hover description editing, project detailed description editing, project page editing, image block editing, list/tag editing, and contact information editing work reliably without causing page breaks or data corruption
+- **Stable Image Management**: Image uploads except profile image work without breaking functionality
+- **Fixed Edit Mode Bar Visibility**: Blue "Edit Mode Active" bar is always visible and never hidden behind the navigation bar, with undo/redo/save buttons always accessible and clickable
+- **Proper Editor Control Positioning**: Edit mode bar positioned with appropriate z-index and spacing to ensure all editor controls remain visible and functional
+- **Fixed Revision History Modal Experience**: Revision history modal displays all text within modal boundaries with proper scrolling when content overflows, ensuring all content remains fully readable
+- **Scrollable Revision History**: Revision history modal content scrolls properly when there is overflow, allowing access to all revision information
+- **Reliable Project Thumbnail Upload Experience**: Project thumbnail images upload reliably on the first attempt with immediate visual feedback and proper error handling
+- **Consistent Project Image Upload**: Project thumbnail uploads work consistently without requiring multiple attempts through robust upload handling
+- **Functional Image Block Upload Experience**: Image blocks on project pages support reliable image upload functionality with intuitive upload UI and immediate visual feedback
+- **Image Block Upload Reliability**: Image block uploads work consistently on the first attempt with proper error handling and immediate display of uploaded images
+- **Image Block Display Control**: Uploaded images in image blocks display correctly with proper sizing, formatting, and layout within project page content
+- **Image Block Persistence Control**: All uploaded images in image blocks are properly stored and persist across sessions and deployments
+- **Image Block Integration Control**: Image block functionality is fully integrated with the global save, undo/redo, and revision history system like all other content blocks
+- **Interactive Constellation Background Management**: Experience the same dynamic constellation background as visitors while maintaining full editing capabilities
+- **Constellation Background Compatibility**: Interactive constellation does not interfere with editing functionality or UI elements in editor mode
+- **Enhanced Profile Image Management**: Profile image displays at a larger size with proper spacing to prevent text cutoff, and cannot be edited, uploaded, or replaced
+- **No Profile Image Upload Access**: Profile image area is not clickable and provides no upload or editing functionality
+- **Traditional Project Card Management**: Manage project cards using the traditional design as shown in the reference images, filling the entire card area with proper layout and styling
+- **Full Card Coverage Management**: Manage project cards that fill the complete card area with proper image display and content layout matching the reference design
+- **Functional Project Card Hover Management**: Manage project cards with fully functional hover overlays that display project summary text when hovered over or tapped, providing quick preview of project content with proper animation and text display
+- **Working Hover Animation Management**: Manage hover overlays that appear smoothly on mouseover/tap with correct animation timing and visual effects
+- **Clickable Project Card Management**: Manage project cards that are clickable and reliably navigate to individual project pages for detailed viewing
+- **Project Card Navigation Management**: Manage project cards that link to individual project pages with proper ID matching and state management to prevent "Project Not Found" errors
+- **Responsive Project Grid Management**: Manage project cards that display in a responsive grid layout adapting to different screen sizes while maintaining visual balance
+- **Centered Project Grid Management**: Manage responsive project grid layout with centered group positioning that maintains visual balance across all devices
+- **Dual Description Editing Control**: Edit both hover description (plain text) and detailed description (markdown) fields independently for each project
+- **Hover Description Editing Control**: Edit project card hover descriptions directly by clicking on them when in editor mode as plain text
+- **Detailed Description Editing Control**: Edit project detailed descriptions directly by clicking on them when in editor mode with full markdown support
+- **Description Field Separation Control**: Edit either description field independently, with changes updating only the intended display area
+- **Plain Text Hover Editing**: Edit hover descriptions as plain text without markdown formatting, ensuring clean overlay display
+- **Markdown Detailed Editing**: Edit detailed descriptions with full markdown syntax support for rich formatting on project pages
+- **Clean Markdown List Editing Control**: Edit markdown bullet lists that display only a single bullet per item, with clean and consistent formatting throughout all markdown-rendered content
+- **Consistent Markdown Styling Control**: Control all markdown-rendered lists with consistent styling that prevents duplicate bullets and ensures professional appearance
+- **Independent Description Update Control**: Control editing of either description field without affecting the other field
+- **Description Field Isolation Control**: Ensure markdown formatting never appears in hover overlays while maintaining full markdown support on project pages
+- **Individual Project Page Management**: Create, edit, and manage individual project pages with customizable content blocks and markdown support
+- **Project Page Content Block Editing**: Edit various content block types on project pages including text sections, image carousels, and rich media elements with full markdown formatting support
+- **Markdown Content Editing**: Create and edit rich, formatted content using full markdown syntax including headers, emphasis, tables, lists, links, code blocks, and other formatting options
+- **Project Page Navigation Control**: Control project page routing and navigation through clickable project cards
+- **Back to Portfolio Control**: Use "Back to Portfolio" button on project pages to navigate directly to the "Projects" section with proper scroll positioning
+- **Comprehensive Project Page Editing Control**: Full control over editing all separate project page details including text, images, carousels, and other content elements with complete Edit Mode Active integration
+- **Image Block Editing Control**: Full control over image blocks on project pages with upload, replacement, and removal capabilities when authenticated and in editor mode
+- **Image Block Upload Control**: Upload images to image blocks with intuitive upload interface and immediate visual feedback
+- **Image Block Management Control**: Manage all aspects of image blocks including content, display, and persistence with seamless integration into the editing system
+- **Instant Global Edit Visibility**: All content changes including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information made in editor mode are immediately visible to all visitors across all devices, ensuring instant global consistency
+- **Real-Time Universal Updates**: All content edits including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information are instantly synchronized with the backend and visible to everyone without delay
+- **Cross-Device Edit Synchronization**: Content changes including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information made on one device are immediately reflected on all other devices and visible to all visitors without delay
+- **Static Profile Image Management**: Profile image always displays the static image from "https://i.imgur.com/4NAe5Nx.png" at a larger size with enhanced spacing and cannot be edited, uploaded, or replaced
+- **Deployment-Safe Editing Experience**: All edits including projects, project order, project hover descriptions, project detailed descriptions, project pages, image blocks, lists, tags, and contact information are immediately written to persistent backend storage and survive deployments without data loss
+- **Migration-Transparent Editing**: Editing experience remains consistent and all content is preserved across backend deployments and version updates
+- **Persistent Edit Storage**: All content changes are immediately written to persistent backend storage that survives canister upgrades and deployments
+- **Zero Data Loss Editing**: Editing experience guarantees no data loss during deployments, upgrades, or version changes through persistent backend storage
+- **Real-Time Backend Persistence**: All edits are immediately written to the backend's persistent storage system as they are made, ensuring survival across deployments
+- **Immediate Admin Access**: After successful Internet Identity authentication, the "Edit" button and all editing controls appear immediately and reliably without requiring any additional steps, toggles, or sequences
+- **Reliable Admin Controls**: All admin functionality including the Edit button becomes available instantly upon authentication across all browsers and devices
+- **Direct Editor Access**: Authenticated owner gains immediate access to editor mode and all editing capabilities without any hidden sequences or additional requirements
+- **Cross-Browser Admin Consistency**: Admin controls appear consistently and immediately after login across all browsers and devices
+- **No Additional Steps Required**: Authentication with Internet Identity is the only requirement to access all admin functionality
+- **Authenticated Editor Access**: Editor mode is exclusively accessible after Internet Identity authentication with principal verification
+- **No Profile Setup Experience**: Never encounter profile setup dialogs or prompts, allowing immediate access to editing functionality after authentication
+- True WYSIWYG editing by clicking directly on any element except the static profile image on the page when authenticated and in editor mode
+- Immediate visual feedback and live preview of all changes for authenticated owner only
+- Click any text to edit it in place with rich text formatting options when authenticated and in editor mode
+- Click any image except the static profile image to upload a replacement with instant preview when authenticated and in editor mode
+- **Click any button to modify its text, styling, and properties when authenticated and in editor mode**
+- **Click any bullet list or tag group to edit items directly with add, remove, and reorder capabilities when authenticated and in editor mode**
+- **Click any contact information element to edit fields, labels, and properties when authenticated and in editor mode**
+- **Click any project card hover description to edit plain text content directly when authenticated and in editor mode**
+- **Click any project detailed description to edit markdown content directly when authenticated and in editor mode**
+- **Click any project page content block to edit and customize content with full markdown support when authenticated and in editor mode**
+- **Click any image block on project pages to access upload interface and manage images when authenticated and in editor mode**
+- **Comprehensive List and Tag Management**: Add new list items and tags, edit existing ones, remove items, and reorder through drag-and-drop when authenticated and in editor mode
+- **Direct List Manipulation**: Click on any bullet list or tag group to access full editing capabilities including adding, removing, and reordering items
+- **List Structure Control**: Maintain proper list formatting while having full control over content and structure
+- **Individual Item Editing**: Edit the text content of individual bullet points and tags by clicking directly on them
+- **List Reorder Control**: Use drag-and-drop functionality to reorder bullet points and tags within their respective lists
+- **Add List Item Control**: Use "Add Item" controls to add new bullet points and tags to existing lists
+- **Remove List Item Control**: Use delete/remove controls to remove individual list items and tags from lists
+- **Project Management**: Create unlimited blank project cards using "Add New Project" button with complete data isolation and zero cross-project interference, ensuring each project maintains complete independence
+- **Unlimited Project Creation**: Create unlimited blank project cards without restrictions, with each card maintaining complete independence and data isolation
+- **Absolute Project Independence**: Each new project starts with blank default values and maintains complete independence from other projects with no data copying or interference through data isolation
+- **Zero Cross-Project Interference**: Add and edit projects without experiencing any bugs where one project affects another project's data, images, or properties through isolation mechanisms
+- **Reliable Project Addition**: Create unlimited projects reliably without any bugs or data corruption affecting existing cards through implementation
+- **Independent Project Editing**: Edit any project card without affecting any other project card through robust data isolation and state management
+- **Parallel Project Management**: Edit multiple project cards simultaneously with complete data isolation and no interference between projects
+- **Project Data Integrity**: Ensure no project overwrites another's data and images/tags always stay with the correct project
+- **Enhanced Project Grid Management**: View and manage responsive centered group grid of project cards with all editing capabilities when authenticated and in editor mode
+- **Interactive Project Card Management**: Manage project cards with hover animations, editable description overlays, and navigation control
+- **Dual Description Management Control**: Manage both hover description (plain text) and detailed description (markdown) fields for each project independently
+- **Hover Description Management Control**: Edit project card hover descriptions that appear on hover directly in place when in editor mode as plain text
+- **Detailed Description Management Control**: Edit project detailed descriptions that appear on project pages directly in place when in editor mode with full markdown support
+- **Description Field Management Control**: Control editing of both description fields independently with proper separation and isolation
+- **Project URL Management**: Add optional URL/link field to project cards for navigation to individual project pages
+- **Multi-line Project Descriptions**: Edit both description fields with consistent text wrapping and multi-line support within cards with reliable formatting behavior
+- **Project Reordering Control**: Use completely reliable drag-and-drop functionality to reorder project cards with immediate visual feedback, instant backend synchronization, and global visibility to all visitors without requiring separate save actions
+- **Immediate Project Order Control**: Project card reordering immediately updates the order and saves to backend, making changes instantly visible to all visitors across all devices
+- **Global Project Order Control**: Project reordering changes are immediately visible to all visitors without delay, ensuring consistent order across all sessions and devices
+- **Flawless Reorder Control**: Experience completely consistent drag-and-drop reordering functionality without any glitches, failures, or data corruption
+- **Complete Project Undo/Redo Control**: Use undo/redo buttons to revert or reapply all project operations including add, remove, edit, reorder, hover description edits, and detailed description edits with proper integration into the global undo/redo system in correct chronological order
+- **Individual Project Page Control**: Create, edit, and manage individual project pages with customizable content blocks, rich media elements, and markdown formatting
+- **Project Page Content Block Control**: Add, edit, remove, and reorder various content block types on project pages including text sections, image carousels, and rich media elements with markdown support
+- **Project Page Navigation Control**: Manage project page routing and navigation through clickable project cards
+- **User-Only Project Content Management**: Create and manage projects with content that is always displayed, never overridden by mock data, placeholders, or default content
+- **Clean Project Content States**: Projects without user content show clean empty or neutral states during editing instead of placeholder or mock content
+- **No Mock Content Override**: System never displays mock data, placeholder content, or default text/images for projects during editing
+- **Project Content Persistence Control**: User-edited project content is permanently stored and always displayed as entered
+- **Reliable Project Thumbnail Upload Control**: Upload project thumbnail images reliably on the first attempt with immediate visual feedback and comprehensive error handling
+- **Custom Save Control**: Use dedicated custom "Save" button in editor mode that persists all pending changes to projects, content, lists, tags, contact information, project hover descriptions, project detailed descriptions, project page blocks, and image blocks globally, ensuring all edits are saved for every visitor
+- **Unsaved Changes Visibility**: Visual indicators for unsaved changes on project cards, content sections, project pages, image blocks, and contact information that accurately reflect pending changes and are cleared when custom "Save" is clicked
+- **Global LIFO Undo/Redo Control**: Use global Last-In, First-Out undo/redo system where all changes (add, edit, delete, reorder) including list, tag, project reordering, project hover description edits, project detailed description edits, project page block edits, image block operations, and contact information operations are part of a single stack, ensuring undo/redo works for every action in the correct chronological order
+- **Backend-Synchronized Control**: Saving, undo, and redo actions update the backend so all visitors see the latest state, not just the admin
+- **Stack-Based Undo/Redo**: Use undo/redo buttons with stack-based functionality where the most recent action is undone first, working for all operations including project management, project hover description editing, project detailed description editing, project page editing, image block operations, list editing, and contact information editing
+- **Complete Content Undo/Redo**: Use undo/redo buttons to revert or reapply all types of content changes including text edits, image uploads (except profile), button modifications, project operations, project reordering, project hover description edits, project detailed description edits, project page block edits, image block operations, list modifications, tag changes, contact information edits, and any other content changes
+- **Active Undo/Redo Controls**: Undo/redo buttons become visually active and functional when changes are made, providing clear feedback on availability
+- **Full Edit History Navigation**: Navigate through complete edit history for all content types including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information with proper state management
+- **Optional Project Features**: Bulk actions for managing multiple projects when authenticated and in editor mode
+- Individual element revision history with selective revert capabilities for authenticated owner only
+- Real-time content updates without page refresh
+- Intuitive direct manipulation interface for all content management restricted to authenticated owner
+- **Exclusive Edit Experience**: All editing UI elements (hover styling, edit affordances) are visible only when authenticated and in editor mode
+- **Instant Global Data Persistence**: All edits including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information automatically save to the backend and persist across browser sessions and page reloads with instant global visibility
+- **Exclusive Editor Mode Visual Cues**: All editing UI elements strictly only appear in editor mode for authenticated owner and are completely hidden for all other users
+- **Comprehensive Revision History Control**: Access complete revision history management through dedicated "History" button or section in editor mode, exclusively available when authenticated
+- **Revision Browsing Control**: Browse through all previous revisions with clear timestamps and content previews when authenticated and in editor mode
+- **Revision Preview Control**: Preview any previous revision to see exactly how content appeared at that point in time when authenticated and in editor mode
+- **Functional Revision Restoration**: Use "Restore" button to properly restore any previous revision with immediate UI updates and global synchronization when authenticated and in editor mode
+- **Complete Revision Restoration Control**: Restore functionality works for all content types including text, images (except profile), buttons, projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, contact information, and any other editable elements
+- **Global Revision Impact**: Immediate confirmation that revision restorations update the live site for all visitors, ensuring global visibility of restored content
+- **Individual Element Revision Control**: View and manage revision history for each individual component with detailed change tracking when authenticated and in editor mode
+- **Revision Comparison Control**: Compare different versions of individual elements side-by-side to understand changes between revisions when authenticated and in editor mode
+- **Revision Metadata Access**: Access revision metadata including timestamps, content types changed, and revision descriptions when authenticated and in editor mode
+- **Save Instance Revision Tracking**: Each custom save operation creates revision entries with complete content snapshots and proper versioning
+- **Edit Instance Revision Tracking**: Individual edit operations are tracked in revision history with detailed change information
+- **Edit State Control**: Navigate edit history with undo/redo functionality and proper state management with visual feedback on button availability, restricted to authenticated owner
+- **Autosave Experience**: Automatic saving of edits every 1-2 minutes with visual indicators and revision history tracking
+- **Version Control Experience**: Access to both autosaved drafts and manually saved versions with comprehensive revision management
+- **Error Recovery**: Access to error recovery mechanisms and support tools when content loading issues occur
+- **Secure Editing Environment**: Complete confidence that only the authenticated owner can access and use editing features, with no possibility of unauthorized access to administrative functions
+- **Global Impact Visibility**: Immediate confirmation that all changes including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information made in editor mode are visible to all public visitors without delay, ensuring the owner can see the global impact of their edits
+- **Public Content Verification**: Ability to verify that all content changes including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information are immediately reflected for all visitors by viewing the site in non-editor mode
+- **Button Editing Control**: Full control over button text, styling, and properties through direct click-to-edit interface when authenticated and in editor mode
+- **Complete Content Edit Control**: Comprehensive editing control over all content types including projects, project order, project hover descriptions, project detailed descriptions, project page blocks, image blocks, lists, tags, and contact information with proper persistence and global synchronization
+- **Edit Mode Project Card Control**: When in edit mode, project cards are not clickable for navigation, allowing for proper editing functionality without interference from link behavior
+- **Non-Edit Mode Project Card Navigation**: When not in edit mode, project cards are clickable and navigate to individual project pages for seamless navigation experience
+- **List and Tag Edit Control**: Full control over bullet lists and tag groups with comprehensive editing capabilities when authenticated and in editor mode
+- **List Item Edit Control**: Direct editing control over individual list items and tags with proper text editing and management capabilities
+- **Contact Information Edit Control**: Full control over contact information fields, labels, and properties through direct click-to-edit interface when authenticated and in editor mode
+- **Contact Information Field Management**: Edit contact information including email, phone, location, and LinkedIn link when authenticated and in editor mode
+- **Static Contact Information Management**: Manage clean, professional contact information display without form functionality when authenticated and in editor mode
+- **Streamlined Contact Layout Control**: Manage clean, left-aligned layout for "Get In Touch" content and "What I Can Help With" section without the "Connect on LinkedIn" block for a cleaner, more professional editing experience

@@ -1,0 +1,10 @@
+{
+  "templates": {
+    "declaration_generator": "blob-10",
+    "build_template": "1.0.0"
+  },
+  "components": {
+    "authorization": "v1.0.0",
+    "blob-storage": "v1.1.1"
+  }
+}

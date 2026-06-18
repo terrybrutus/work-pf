@@ -1,0 +1,601 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.75rem;
+        --background: 0.08 0.02 264;
+        --foreground: 0.98 0.005 264;
+        --card: 0.12 0.02 264;
+        --card-foreground: 0.98 0.005 264;
+        --popover: 0.15 0.02 264;
+        --popover-foreground: 0.98 0.005 264;
+        --primary: 0.75 0.12 264;
+        --primary-foreground: 0.08 0.02 264;
+        --secondary: 0.18 0.02 264;
+        --secondary-foreground: 0.98 0.005 264;
+        --muted: 0.18 0.02 264;
+        --muted-foreground: 0.75 0.02 264;
+        --accent: 0.25 0.03 300;
+        --accent-foreground: 0.98 0.005 264;
+        --destructive: 0.65 0.20 25;
+        --destructive-foreground: 0.08 0.02 264;
+        --border: 0.20 0.02 264;
+        --input: 0.20 0.02 264;
+        --ring: 0.75 0.12 264;
+    }
+
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+section[id] {
+    scroll-margin-top: 160px;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: oklch(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+    background: oklch(var(--muted-foreground) / 0.3);
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: oklch(var(--muted-foreground) / 0.5);
+}
+
+.content-layer {
+    position: relative;
+    z-index: 10;
+}
+
+@media (max-width: 768px) {
+    section[id] {
+        scroll-margin-top: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    section[id] {
+        scroll-margin-top: 120px;
+    }
+}
+
+.break-words {
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+.whitespace-pre-wrap {
+    white-space: pre-wrap;
+}
+
+.modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.break-all {
+    word-break: break-all;
+}
+
+/* Hero name styling with Nanum Pen Script font and subtle animated glow effect */
+.text-hero-name {
+    font-family: 'Nanum Pen Script', cursive;
+    color: oklch(0.92 0.015 264);
+    text-shadow: 
+        0 0 15px oklch(0.78 0.10 264 / 0.25),
+        0 0 30px oklch(0.78 0.10 264 / 0.15),
+        0 0 45px oklch(0.78 0.10 264 / 0.08);
+}
+
+/* Enhanced project card animations */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes subtle-float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes gentle-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+/* Sophisticated hero name glow animation that pulses and shimmers */
+@keyframes hero-name-glow {
+    0%, 100% {
+        text-shadow: 
+            0 0 15px oklch(0.78 0.10 264 / 0.25),
+            0 0 30px oklch(0.78 0.10 264 / 0.15),
+            0 0 45px oklch(0.78 0.10 264 / 0.08);
+    }
+    25% {
+        text-shadow: 
+            0 0 18px oklch(0.80 0.12 264 / 0.30),
+            0 0 35px oklch(0.80 0.12 264 / 0.18),
+            0 0 52px oklch(0.80 0.12 264 / 0.10);
+    }
+    50% {
+        text-shadow: 
+            0 0 20px oklch(0.82 0.14 264 / 0.35),
+            0 0 40px oklch(0.82 0.14 264 / 0.22),
+            0 0 60px oklch(0.82 0.14 264 / 0.12);
+    }
+    75% {
+        text-shadow: 
+            0 0 18px oklch(0.80 0.12 264 / 0.30),
+            0 0 35px oklch(0.80 0.12 264 / 0.18),
+            0 0 52px oklch(0.80 0.12 264 / 0.10);
+    }
+}
+
+/* Dynamic fly-in entrance animation: name flies in from off-screen (extremely large), fades in, bounces gently, then scales to final size */
+@keyframes name-fly-in {
+    0% {
+        opacity: 0;
+        transform: translateY(-150vh) scale(5);
+        filter: blur(20px);
+        text-shadow: 
+            0 0 0px oklch(0.78 0.10 264 / 0),
+            0 0 0px oklch(0.78 0.10 264 / 0),
+            0 0 0px oklch(0.78 0.10 264 / 0);
+    }
+    30% {
+        opacity: 0.3;
+        transform: translateY(-50vh) scale(3.5);
+        filter: blur(15px);
+        text-shadow: 
+            0 0 20px oklch(0.78 0.10 264 / 0.2),
+            0 0 40px oklch(0.78 0.10 264 / 0.15),
+            0 0 60px oklch(0.78 0.10 264 / 0.1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translateY(-10vh) scale(1.8);
+        filter: blur(8px);
+        text-shadow: 
+            0 0 25px oklch(0.80 0.12 264 / 0.35),
+            0 0 50px oklch(0.80 0.12 264 / 0.25),
+            0 0 75px oklch(0.80 0.12 264 / 0.15);
+    }
+    65% {
+        opacity: 0.9;
+        transform: translateY(0) scale(1.15);
+        filter: blur(3px);
+        text-shadow: 
+            0 0 30px oklch(0.82 0.14 264 / 0.45),
+            0 0 60px oklch(0.82 0.14 264 / 0.30),
+            0 0 90px oklch(0.82 0.14 264 / 0.18);
+    }
+    75% {
+        opacity: 1;
+        transform: translateY(-8px) scale(1.05);
+        filter: blur(1px);
+        text-shadow: 
+            0 0 25px oklch(0.80 0.12 264 / 0.40),
+            0 0 50px oklch(0.80 0.12 264 / 0.25),
+            0 0 75px oklch(0.80 0.12 264 / 0.15);
+    }
+    85% {
+        opacity: 1;
+        transform: translateY(3px) scale(0.98);
+        filter: blur(0px);
+        text-shadow: 
+            0 0 20px oklch(0.78 0.10 264 / 0.30),
+            0 0 40px oklch(0.78 0.10 264 / 0.20),
+            0 0 60px oklch(0.78 0.10 264 / 0.12);
+    }
+    92% {
+        opacity: 1;
+        transform: translateY(-2px) scale(1.01);
+        filter: blur(0px);
+        text-shadow: 
+            0 0 18px oklch(0.78 0.10 264 / 0.28),
+            0 0 36px oklch(0.78 0.10 264 / 0.18),
+            0 0 54px oklch(0.78 0.10 264 / 0.10);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0px);
+        text-shadow: 
+            0 0 15px oklch(0.78 0.10 264 / 0.25),
+            0 0 30px oklch(0.78 0.10 264 / 0.15),
+            0 0 45px oklch(0.78 0.10 264 / 0.08);
+    }
+}
+
+/* Combined animation: continuous subtle glow pulse (entrance animation handled by component) */
+.animate-hero-name-glow {
+    animation: hero-name-glow 5s ease-in-out infinite;
+}
+
+.animate-in {
+    animation: fade-in 0.3s ease-out;
+}
+
+.fade-in-0 {
+    animation-fill-mode: both;
+}
+
+/* Smooth hover transitions for project cards */
+.project-card-hover {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* Enhanced white overlay animation for project cards */
+.project-overlay {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+    backdrop-filter: blur(2px);
+    animation: fade-in 0.3s ease-out;
+}
+
+/* Project card aspect ratio */
+.aspect-project {
+    aspect-ratio: 4 / 3;
+}
+
+/* Project description overlay styling */
+.project-description-overlay {
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+    color: rgb(31 41 55);
+    max-width: 24rem;
+}
+
+/* Responsive project card adjustments */
+@media (max-width: 768px) {
+    .project-description-overlay {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        max-width: 20rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-description-overlay {
+        font-size: 0.8125rem;
+        line-height: 1.125rem;
+        max-width: 18rem;
+    }
+}
+
+/* Markdown list styling - Fix double bullets with high contrast */
+.markdown-list {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+}
+
+.markdown-list li {
+    margin-left: 0;
+    padding-left: 0;
+    list-style-position: outside;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+/* Ensure nested lists work properly */
+.markdown-list ul {
+    list-style-type: circle;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.markdown-list ul ul {
+    list-style-type: square;
+}
+
+/* Override any conflicting prose styles for lists with high contrast */
+.prose .markdown-list {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+}
+
+.prose .markdown-list li {
+    margin-left: 0;
+    padding-left: 0;
+    list-style-position: outside;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.prose .markdown-list li::marker {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* High contrast prose styling for markdown content */
+.prose-invert {
+    --tw-prose-body: rgba(255, 255, 255, 0.9);
+    --tw-prose-headings: rgb(255, 255, 255);
+    --tw-prose-lead: rgba(255, 255, 255, 0.85);
+    --tw-prose-links: rgb(147, 197, 253);
+    --tw-prose-bold: rgb(255, 255, 255);
+    --tw-prose-counters: rgba(255, 255, 255, 0.9);
+    --tw-prose-bullets: rgba(255, 255, 255, 0.9);
+    --tw-prose-hr: rgba(255, 255, 255, 0.2);
+    --tw-prose-quotes: rgba(255, 255, 255, 0.95);
+    --tw-prose-quote-borders: rgba(255, 255, 255, 0.3);
+    --tw-prose-captions: rgba(255, 255, 255, 0.8);
+    --tw-prose-code: rgb(255, 255, 255);
+    --tw-prose-pre-code: rgb(255, 255, 255);
+    --tw-prose-pre-bg: rgba(17, 24, 39, 0.8);
+    --tw-prose-th-borders: rgba(255, 255, 255, 0.3);
+    --tw-prose-td-borders: rgba(255, 255, 255, 0.2);
+}
+
+/* Micro-animations for buttons */
+button, a[role="button"], .button-like {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:hover, a[role="button"]:hover, .button-like:hover {
+    transform: translateY(-1px);
+}
+
+button:active, a[role="button"]:active, .button-like:active {
+    transform: translateY(0);
+}
+
+/* Subtle badge animations */
+.badge-animate {
+    transition: all 0.2s ease;
+}
+
+.badge-animate:hover {
+    transform: scale(1.05);
+}
+
+/* Card entrance animations */
+.card-entrance {
+    animation: fade-in 0.5s ease-out;
+}
+
+/* Input focus animations */
+input:focus, textarea:focus, select:focus {
+    transition: all 0.2s ease;
+}
+
+/* Link hover effects */
+a {
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
+/* Navigation link animations */
+nav a, nav button {
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+nav a::after, nav button::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: currentColor;
+    transition: width 0.3s ease;
+}
+
+nav a:hover::after, nav button:hover::after {
+    width: 100%;
+}
+
+/* Section reveal animations */
+section {
+    animation: fade-in 0.6s ease-out;
+}
+
+/* Image loading animations */
+img {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+img:hover {
+    transform: scale(1.01);
+}
+
+/* Dialog/Modal entrance animations */
+[role="dialog"] {
+    animation: fade-in 0.2s ease-out;
+}
+
+/* Tooltip animations */
+[role="tooltip"] {
+    animation: fade-in 0.15s ease-out;
+}
+
+/* Dropdown menu animations */
+[role="menu"] {
+    animation: fade-in 0.2s ease-out;
+}
+
+/* Progress bar animations */
+.progress-bar {
+    transition: width 0.3s ease;
+}
+
+/* Skeleton loading animations */
+.skeleton {
+    animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+/* Shimmer effect for loading states */
+.shimmer {
+    background: linear-gradient(
+        90deg,
+        oklch(var(--muted)) 0%,
+        oklch(var(--muted-foreground) / 0.1) 50%,
+        oklch(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Icon animations */
+svg {
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.icon-hover:hover svg {
+    transform: scale(1.1);
+}
+
+/* Smooth transitions - removed theme-specific transitions */
+* {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+}
+
+/* Preserve specific animations that shouldn't be affected by global transition */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Stagger animation delays for lists */
+.stagger-item:nth-child(1) { animation-delay: 0ms; }
+.stagger-item:nth-child(2) { animation-delay: 50ms; }
+.stagger-item:nth-child(3) { animation-delay: 100ms; }
+.stagger-item:nth-child(4) { animation-delay: 150ms; }
+.stagger-item:nth-child(5) { animation-delay: 200ms; }
+.stagger-item:nth-child(6) { animation-delay: 250ms; }
+
+/* Page transition animations */
+@keyframes page-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-transition {
+    animation: page-fade-in 0.4s ease-out;
+}
+
+/* Accessibility: Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    /* Disable parallax for reduced motion */
+    [style*="transform: translateY"] {
+        transform: none !important;
+    }
+    
+    /* Disable hero name glow animation for reduced motion but keep static glow */
+    .animate-hero-name-glow {
+        animation: none !important;
+        text-shadow: 
+            0 0 15px oklch(0.78 0.10 264 / 0.25),
+            0 0 30px oklch(0.78 0.10 264 / 0.15),
+            0 0 45px oklch(0.78 0.10 264 / 0.08);
+    }
+    
+    /* Disable name fly-in animation for reduced motion - show immediately */
+    @keyframes name-fly-in {
+        0%, 100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0px);
+            text-shadow: 
+                0 0 15px oklch(0.78 0.10 264 / 0.25),
+                0 0 30px oklch(0.78 0.10 264 / 0.15),
+                0 0 45px oklch(0.78 0.10 264 / 0.08);
+        }
+    }
+}
+
+/* High contrast mode support - Enhanced for dark constellation background with WCAG-compliant colors */
+@media (prefers-contrast: high) {
+    button:hover, a:hover {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+    }
+    
+    :root {
+        --foreground: 0.98 0.005 264;
+        --background: 0.02 0.02 264;
+    }
+    
+    /* Ensure all text meets WCAG AAA standards in high contrast mode */
+    body, p, span, div, li, td, th {
+        color: rgb(255, 255, 255) !important;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: rgb(255, 255, 255) !important;
+    }
+}
+
