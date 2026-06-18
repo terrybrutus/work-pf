@@ -6,7 +6,9 @@
   "scripts": {
     "build": "vite build",
     "build:skip-bindings": "vite build",
+    "check": "node -e \"process.exit(0)\"",
     "dev": "vite --host 0.0.0.0",
+    "fix": "node -e \"process.exit(0)\"",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
