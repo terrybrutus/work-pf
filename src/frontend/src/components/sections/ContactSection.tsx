@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Phone, MapPin, Linkedin, ExternalLink } from 'lucide-react';
+import { Mail, Phone, MapPin, ExternalLink } from 'lucide-react';
 import { EditableText } from '../editor/EditableText';
 import { EditableList } from '../editor/EditableList';
 import AnimatedSection from '../common/AnimatedSection';
@@ -153,7 +153,7 @@ export default function ContactSection({
 
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <Linkedin className="w-6 h-6 text-primary" />
+                      <ExternalLink className="w-6 h-6 text-primary" />
                     </div>
                     <div>
                       <p className="font-medium">LinkedIn</p>

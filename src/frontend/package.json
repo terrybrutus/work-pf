@@ -1,0 +1,39 @@
+{
+  "name": "@caffeine/template-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "build:skip-bindings": "vite build",
+    "dev": "vite --host 0.0.0.0",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@caffeineai/core-infrastructure": "latest",
+    "@caffeineai/object-storage": "latest",
+    "@dfinity/auth-client": "latest",
+    "@icp-sdk/core": "latest",
+    "@radix-ui/react-alert-dialog": "latest",
+    "@radix-ui/react-dialog": "latest",
+    "@radix-ui/react-slot": "latest",
+    "@tanstack/react-query": "latest",
+    "@tailwindcss/typography": "latest",
+    "class-variance-authority": "latest",
+    "clsx": "latest",
+    "lucide-react": "latest",
+    "motion": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "sonner": "latest",
+    "tailwind-merge": "latest",
+    "tailwindcss-animate": "^1.0.7",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "latest",
+    "autoprefixer": "latest",
+    "tailwindcss": "^3.4.17",
+    "typescript": "latest"
+  }
+}

@@ -1,6 +1,6 @@
 import { backendInterface, FileReference } from '../backend';
-import { HttpAgent, isV3ResponseBody } from '@dfinity/agent';
-import { IDL } from '@dfinity/candid';
+import { HttpAgent } from '@icp-sdk/core/agent';
+import { IDL } from '@icp-sdk/core/candid';
 
 type Headers = Record<string, string>;
 
@@ -442,10 +442,9 @@ export class StorageClient {
             methodName: '_caffeineStorageCreateCertificate',
             arg: args
         });
-        const respone = result.response.body;
-        if (isV3ResponseBody(respone)) {
-            console.log('Certificate:', respone.certificate);
-            return respone.certificate;
+        const response = result.response.body;
+        if (isCertificateResponseBody(response)) {
+            return response.certificate;
         }
         throw new Error('Expected v3 response body');
     }
@@ -580,4 +579,13 @@ export class StorageClient {
         }
         return chunks;
     }
+}
+
+function isCertificateResponseBody(value: unknown): value is { certificate: Uint8Array } {
+    return (
+        typeof value === 'object' &&
+        value !== null &&
+        'certificate' in value &&
+        value.certificate instanceof Uint8Array
+    );
 }

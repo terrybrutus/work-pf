@@ -1,0 +1,5 @@
+[frontend]
+framework = "react"
+package_manager = "pnpm"
+build = "pnpm build"
+dist = "dist"

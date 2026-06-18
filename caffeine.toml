@@ -1,0 +1,9 @@
+[project]
+name = "work-pf"
+description = "Terry Brutus work portfolio"
+
+[frontend]
+path = "src/frontend"
+
+[backend]
+path = "src/backend"

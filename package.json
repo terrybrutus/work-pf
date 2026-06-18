@@ -1,0 +1,9 @@
+{
+  "name": "work-pf",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm --filter @caffeine/template-frontend build:skip-bindings"
+  }
+}
