@@ -14,7 +14,7 @@ main = "src/backend/main.mo"
 base = "0.16.0"
 
 [toolchain]
-moc = "/home/ubuntu/.motoko/moc/0.16.3-caffeine-4/bin/moc"
+moc = "1.8.1"
 
 [moc]
 args = ["--default-persistent-actors", "--actor-idl=src/backend/system-idl", "-no-check-ir"]

@@ -14,21 +14,28 @@ if [ ! -d "$BASE" ]; then
   exit 1
 fi
 
-pnpm install --no-frozen-lockfile --prefer-offline --child-concurrency 2 --network-concurrency 6
-pnpm --filter "@caffeine/template-frontend" build:skip-bindings
+corepack pnpm install --no-frozen-lockfile --prefer-offline --child-concurrency 2 --network-concurrency 6
+mkdir -p src/backend/dist
 
 "$MOC" \
+  -c \
+  --idl \
+  --stable-types \
   --default-persistent-actors \
   -no-check-ir \
   --actor-idl src/backend/system-idl \
   --package base "$BASE" \
   src/backend/main.mo \
-  -o src/backend/backend.wasm
+  -o src/backend/dist/backend.wasm \
+  --public-metadata candid:service \
+  --public-metadata candid:args
+
+corepack pnpm --filter "@caffeine/template-frontend" build:skip-bindings
 
 mkdir -p /workdir/src/frontend/
 mkdir -p /workdir/src/backend/
 mkdir -p /workdir/.dfx/
 
 cp -rf src/frontend/dist/ /workdir/src/frontend/ 2>/dev/null || echo "No frontend dist to copy"
-cp -f src/backend/backend.wasm /workdir/src/backend/ 2>/dev/null || echo "No backend wasm to copy"
+cp -rf src/backend/dist/ /workdir/src/backend/ 2>/dev/null || echo "No backend dist to copy"
 cp -rf .dfx/ /workdir/ 2>/dev/null || echo "No .dfx to copy"

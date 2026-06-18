@@ -1,9 +1,21 @@
 {
-  "name": "work-pf",
+  "name": "@caffeine/template-app",
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=16.0.0",
+    "pnpm": ">=7.0.0",
+    "npm": "please use pnpm"
+  },
   "scripts": {
-    "build": "pnpm --filter @caffeine/template-frontend build:skip-bindings"
+    "build": "corepack pnpm --filter @caffeine/template-frontend build:skip-bindings",
+    "typecheck": "corepack pnpm -r --if-present run typecheck",
+    "check": "corepack pnpm -r --if-present run check",
+    "fix": "corepack pnpm -r --if-present run fix",
+    "bindgen": "caffeine-bindgen --did-file ./src/backend/dist/backend.did --out-dir ./src/frontend/src --actor-interface-file --force"
+  },
+  "dependencies": {
+    "@caffeineai/core-infrastructure": "^0.3.0"
   }
 }

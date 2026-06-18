@@ -8,8 +8,15 @@
 
 import { Actor, HttpAgent, type HttpAgentOptions, type ActorConfig, type Agent, type ActorSubclass } from "@icp-sdk/core/agent";
 import type { Principal } from "@icp-sdk/core/principal";
-import { idlFactory } from "./declarations/backend.did.js";
-import type { _SERVICE } from "./declarations/backend.did.d.ts";
+import {
+    idlFactory,
+    type _SERVICE,
+    type DidCaffeineStorageRefillInformation as __CaffeineStorageRefillInformation,
+    type DidCaffeineStorageRefillResult as __CaffeineStorageRefillResult,
+    type DidTime as _Time,
+    type DidUserProfile as _UserProfile,
+    type DidUserRole as _UserRole
+} from "./backend-idl";
 export interface Some<T> {
     __kind__: "Some";
     value: T;
@@ -144,7 +151,6 @@ export interface backendInterface {
     updateProject(id: string, content: string): Promise<void>;
     updateStat(key: string, value: string): Promise<void>;
 }
-import type { Time as _Time, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _caffeineStorageBlobsToDelete(): Promise<Array<string>> {
