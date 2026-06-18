@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useActor } from '../hooks/useActor';
 import { loadConfig } from '../config';
 import { StorageClient } from './StorageClient';
-import { FileReference } from '../backend';
+import { FileReference } from '../backend-client';
 import { HttpAgent } from '@icp-sdk/core/agent';
 
 const getHttpAgent = async () => {

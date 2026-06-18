@@ -1,4 +1,4 @@
-import { backendInterface, FileReference } from '../backend';
+import { backendInterface, FileReference } from '../backend-client';
 import { HttpAgent } from '@icp-sdk/core/agent';
 import { IDL } from '@icp-sdk/core/candid';
 

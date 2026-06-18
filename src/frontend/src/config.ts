@@ -1,4 +1,4 @@
-import { createActor, type backendInterface, type CreateActorOptions, ExternalBlob } from './backend';
+import { createActor, type backendInterface, type CreateActorOptions, ExternalBlob } from './backend-client';
 import { StorageClient } from './utils/StorageClient';
 import { HttpAgent } from '@icp-sdk/core/agent';
 

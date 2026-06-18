@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { UserProfile } from '../backend';
+import { UserProfile } from '../backend-client';
 
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();

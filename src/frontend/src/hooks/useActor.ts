@@ -1,7 +1,7 @@
 import { useInternetIdentity } from './useInternetIdentity';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { type backendInterface } from '../backend';
+import { type backendInterface } from '../backend-client';
 import { createActorWithConfig } from '../config';
 
 interface ExtendedBackendInterface extends backendInterface {

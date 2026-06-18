@@ -1,3 +1,0 @@
-[backend]
-language = "motoko"
-main = "main.mo"

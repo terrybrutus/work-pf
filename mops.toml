@@ -5,3 +5,6 @@ description = "Terry Brutus work portfolio backend"
 
 [dependencies]
 base = "0.16.0"
+
+[toolchain]
+moc = "/home/ubuntu/.motoko/moc/0.16.3-caffeine-4/bin/moc"

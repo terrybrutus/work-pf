@@ -2,7 +2,7 @@
 set -euo pipefail
 
 MOC="/home/ubuntu/.motoko/moc/0.16.3-caffeine-4/bin/moc"
-BASE="/home/ubuntu/.motoko/base/0.16.1"
+BASE="/home/ubuntu/.motoko/base/0.16.0"
 
 if [ ! -x "$MOC" ]; then
   echo "Error: Motoko compiler not found at $MOC" >&2
