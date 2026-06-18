@@ -10,7 +10,7 @@ import Debug "mo:base/Debug";
 import List "mo:base/List";
 import Array "mo:base/Array";
 
-actor {
+actor Main {
   transient let textMap = OrderedMap.Make<Text>(Text.compare);
   transient let principalMap = OrderedMap.Make<Principal>(Principal.compare);
 
@@ -24,7 +24,7 @@ actor {
   let registry = Registry.new();
   let accessControlState = AccessControl.initState();
 
-  var stats = textMap.put(textMap.empty<Text>(), "projects_completed", "75+ Projects Completed");
+  transient var stats = textMap.put(textMap.empty<Text>(), "projects_completed", "75+ Projects Completed");
   stats := textMap.put(stats, "learners_impacted", "100K+ Learners Impacted");
 
   public shared ({ caller }) func initializeAccessControl() : async () {
