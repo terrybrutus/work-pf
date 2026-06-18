@@ -1,10 +1,20 @@
 [package]
-name = "work-pf"
+name = "backend"
 version = "0.1.0"
 description = "Terry Brutus work portfolio backend"
+
+[build]
+outputDir = "src/backend/dist"
+args = ["--release"]
+
+[canisters.backend]
+main = "src/backend/main.mo"
 
 [dependencies]
 base = "0.16.0"
 
 [toolchain]
 moc = "/home/ubuntu/.motoko/moc/0.16.3-caffeine-4/bin/moc"
+
+[moc]
+args = ["--default-persistent-actors", "--actor-idl=src/backend/system-idl", "-no-check-ir"]

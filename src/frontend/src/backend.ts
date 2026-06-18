@@ -8,7 +8,8 @@
 
 import { Actor, HttpAgent, type HttpAgentOptions, type ActorConfig, type Agent, type ActorSubclass } from "@icp-sdk/core/agent";
 import type { Principal } from "@icp-sdk/core/principal";
-import { idlFactory, type _SERVICE } from "./declarations/backend.did";
+import { idlFactory } from "./declarations/backend.did.js";
+import type { _SERVICE } from "./declarations/backend.did.d.ts";
 export interface Some<T> {
     __kind__: "Some";
     value: T;
