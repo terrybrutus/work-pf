@@ -247,7 +247,7 @@ export default function ProjectPage({ projectSlug, onNavigateBack }: ProjectPage
         <div className="relative z-10 text-center">
           <h1 className="text-4xl font-bold mb-4 text-white">Project Not Found</h1>
           <p className="text-white/90 mb-8">The project you're looking for doesn't exist or the link may be incorrect.</p>
-          <Button onClick={handleBackToPortfolio}>
+          <Button type="button" onClick={handleBackToPortfolio}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Portfolio
           </Button>
@@ -274,6 +274,7 @@ export default function ProjectPage({ projectSlug, onNavigateBack }: ProjectPage
             </div>
             <div className="flex items-center gap-2">
               <Button
+                type="button"
                 onClick={handleSaveAll}
                 disabled={!hasUnsavedChanges}
                 size="sm"
@@ -294,6 +295,7 @@ export default function ProjectPage({ projectSlug, onNavigateBack }: ProjectPage
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <Button 
+                type="button"
                 variant="outline" 
                 onClick={handleBackToPortfolio}
                 className="flex items-center gap-2"
@@ -304,6 +306,7 @@ export default function ProjectPage({ projectSlug, onNavigateBack }: ProjectPage
               
               {canEdit && (
                 <Button
+                  type="button"
                   onClick={() => setIsEditMode(!isEditMode)}
                   variant={isEditMode ? "default" : "outline"}
                   className="flex items-center gap-2"
@@ -401,6 +404,7 @@ export default function ProjectPage({ projectSlug, onNavigateBack }: ProjectPage
                             />
                             <div className="absolute -top-8 right-0 flex gap-1 bg-background border rounded-md p-1 shadow-md z-50">
                               <Button 
+                                type="button"
                                 size="sm" 
                                 variant="ghost" 
                                 onClick={() => {
@@ -412,6 +416,7 @@ export default function ProjectPage({ projectSlug, onNavigateBack }: ProjectPage
                                 <Save className="w-3 h-3" />
                               </Button>
                               <Button 
+                                type="button"
                                 size="sm" 
                                 variant="ghost" 
                                 onClick={() => setEditingBlock(null)} 
@@ -461,6 +466,7 @@ export default function ProjectPage({ projectSlug, onNavigateBack }: ProjectPage
                     <p className="text-white/90 mb-4">Add new content block</p>
                     <div className="flex flex-wrap gap-2 justify-center">
                       <Button
+                        type="button"
                         variant="outline"
                         onClick={() => addContentBlock('markdown')}
                         className="flex items-center gap-2"
@@ -469,6 +475,7 @@ export default function ProjectPage({ projectSlug, onNavigateBack }: ProjectPage
                         Markdown Block
                       </Button>
                       <Button
+                        type="button"
                         variant="outline"
                         onClick={() => addContentBlock('text')}
                         className="flex items-center gap-2"
@@ -477,6 +484,7 @@ export default function ProjectPage({ projectSlug, onNavigateBack }: ProjectPage
                         Text Block
                       </Button>
                       <Button
+                        type="button"
                         variant="outline"
                         onClick={() => addContentBlock('image')}
                         className="flex items-center gap-2"
@@ -543,6 +551,7 @@ function ImageBlock({ block, isEditMode, onUpload, onEdit, isUploading }: ImageB
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
               <div className="flex gap-2">
                 <Button
+                  type="button"
                   size="sm"
                   variant="secondary"
                   onClick={onEdit}
@@ -568,6 +577,7 @@ function ImageBlock({ block, isEditMode, onUpload, onEdit, isUploading }: ImageB
                 className="hidden"
               />
               <Button
+                type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading}
                 className="flex items-center gap-2"
@@ -626,6 +636,7 @@ function ImageUploadDialog({ isOpen, onClose, onUpload, isUploading }: ImageUplo
             />
             <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <Button
+              type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
               className="flex items-center gap-2"
@@ -638,7 +649,7 @@ function ImageUploadDialog({ isOpen, onClose, onUpload, isUploading }: ImageUplo
             </p>
           </div>
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={onClose} disabled={isUploading}>
+            <Button type="button" variant="outline" onClick={onClose} disabled={isUploading}>
               Cancel
             </Button>
           </div>

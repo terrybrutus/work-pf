@@ -100,10 +100,10 @@ function EditableProjectField({
           />
         )}
         <div className="absolute -top-8 right-0 flex gap-1 bg-background border rounded-md p-1 shadow-md z-50">
-          <Button size="sm" variant="ghost" onClick={handleSave} className="h-6 w-6 p-0">
+          <Button type="button" size="sm" variant="ghost" onClick={handleSave} className="h-6 w-6 p-0">
             <Save className="w-3 h-3" />
           </Button>
-          <Button size="sm" variant="ghost" onClick={onCancelEdit} className="h-6 w-6 p-0">
+          <Button type="button" size="sm" variant="ghost" onClick={onCancelEdit} className="h-6 w-6 p-0">
             <X className="w-3 h-3" />
           </Button>
         </div>
@@ -262,6 +262,7 @@ export default function ProjectCard({ project, canEdit, hasGlobalUnsavedChanges 
             
             <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex gap-2">
               <Button
+                type="button"
                 size="sm"
                 variant="secondary"
                 className="h-8 w-8 p-0 bg-background/80 hover:bg-background"
@@ -276,6 +277,7 @@ export default function ProjectCard({ project, canEdit, hasGlobalUnsavedChanges 
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
+                    type="button"
                     size="sm"
                     variant="destructive"
                     className="h-8 w-8 p-0"
@@ -456,6 +458,7 @@ export default function ProjectCard({ project, canEdit, hasGlobalUnsavedChanges 
                 ))}
                 
                 <Button
+                  type="button"
                   size="sm"
                   variant="outline"
                   onClick={() => setShowTagDialog(true)}
@@ -480,6 +483,7 @@ export default function ProjectCard({ project, canEdit, hasGlobalUnsavedChanges 
                   </div>
                 )}
                 <Button
+                  type="button"
                   variant="outline"
                   onClick={() => setShowImageUpload(true)}
                   className="flex items-center gap-2"
@@ -491,7 +495,7 @@ export default function ProjectCard({ project, canEdit, hasGlobalUnsavedChanges 
             </div>
 
             <div className="flex justify-end gap-2 pt-4 border-t">
-              <Button variant="outline" onClick={() => setShowEditPanel(false)}>
+              <Button type="button" variant="outline" onClick={() => setShowEditPanel(false)}>
                 Close
               </Button>
             </div>
@@ -514,6 +518,7 @@ export default function ProjectCard({ project, canEdit, hasGlobalUnsavedChanges 
                 className="hidden"
               />
               <Button
+                type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading}
                 className="flex items-center gap-2"
@@ -534,7 +539,7 @@ export default function ProjectCard({ project, canEdit, hasGlobalUnsavedChanges 
               )}
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowImageUpload(false)} disabled={isUploading}>
+              <Button type="button" variant="outline" onClick={() => setShowImageUpload(false)} disabled={isUploading}>
                 Cancel
               </Button>
             </div>
@@ -560,10 +565,10 @@ export default function ProjectCard({ project, canEdit, hasGlobalUnsavedChanges 
               }}
             />
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowTagDialog(false)}>
+              <Button type="button" variant="outline" onClick={() => setShowTagDialog(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleAddTag} disabled={!newTag.trim()}>
+              <Button type="button" onClick={handleAddTag} disabled={!newTag.trim()}>
                 <Tag className="w-4 h-4 mr-2" />
                 Add Tag
               </Button>

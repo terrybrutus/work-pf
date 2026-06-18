@@ -78,8 +78,8 @@ export function useStats() {
     queryFn: async () => {
       if (!actor) {
         return {
-          projects_completed: '75+ Projects Completed',
-          learners_impacted: '100K+ Learners Impacted'
+          projects_completed: '100+ Asset Pipeline',
+          learners_impacted: '1.2M+ LMS Reach'
         };
       }
       
@@ -93,8 +93,8 @@ export function useStats() {
       } catch (error) {
         console.error('Failed to fetch stats:', error);
         return {
-          projects_completed: '75+ Projects Completed',
-          learners_impacted: '100K+ Learners Impacted'
+          projects_completed: '100+ Asset Pipeline',
+          learners_impacted: '1.2M+ LMS Reach'
         };
       }
     },
@@ -445,6 +445,33 @@ export interface Project {
 }
 
 const CONTENT_PROJECT_TITLE = '__PORTFOLIO_CONTENT__';
+const AUDIENCE_PROJECT_TITLE = '__PORTFOLIO_AUDIENCES__';
+
+export type AudienceStatus = 'active' | 'archived' | 'expired';
+
+export interface AudienceTheme {
+  primary: string;
+  accent: string;
+  background: string;
+}
+
+export interface AudienceView {
+  id: string;
+  slug: string;
+  label: string;
+  companyName: string;
+  roleTitle: string;
+  status: AudienceStatus;
+  expiresAt: string;
+  jobDescription: string;
+  toneNotes: string;
+  jargonNotes: string;
+  theme: AudienceTheme;
+  projectIds: string[];
+  contentOverrides: Record<string, string>;
+  createdAt: number;
+  updatedAt: number;
+}
 
 export function useContentElements() {
   const { actor, isFetching } = useActor();
@@ -614,13 +641,17 @@ export function useProjects() {
   return useQuery<Project[]>({
     queryKey: ['projects'],
     queryFn: async () => {
-      if (!actor) return [];
+      if (!actor) return getDefaultProjects();
       
       try {
         const projects = await actor.getProjects();
         const actualProjects = projects.filter(([title]) => 
-          title !== CONTENT_PROJECT_TITLE
+          title !== CONTENT_PROJECT_TITLE && title !== AUDIENCE_PROJECT_TITLE
         );
+
+        if (actualProjects.length === 0) {
+          return getDefaultProjects();
+        }
         
         const parsedProjects = actualProjects.map(([title, description], index) => {
           try {
@@ -665,8 +696,79 @@ export function useProjects() {
     },
     enabled: !!actor && !isFetching,
     retry: 2,
-    initialData: [],
+    initialData: getDefaultProjects(),
     staleTime: 10000, // Reduced stale time for more frequent updates
+  });
+}
+
+export function useAudienceViews() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<AudienceView[]>({
+    queryKey: ['audienceViews'],
+    queryFn: async () => {
+      if (!actor) {
+        return [];
+      }
+
+      try {
+        const projects = await actor.getProjects();
+        const audienceEntry = projects.find(
+          ([title]) => title === AUDIENCE_PROJECT_TITLE,
+        );
+
+        if (!audienceEntry) {
+          return [];
+        }
+
+        const parsed = JSON.parse(audienceEntry[1]);
+        if (!Array.isArray(parsed)) {
+          return [];
+        }
+
+        return parsed
+          .map(normalizeAudienceView)
+          .filter((audience): audience is AudienceView => Boolean(audience));
+      } catch (error) {
+        console.error('Failed to fetch audience views:', error);
+        return [];
+      }
+    },
+    enabled: !!actor && !isFetching,
+    retry: 2,
+    initialData: [],
+    staleTime: 10000,
+  });
+}
+
+export function useSaveAudienceViews() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (audienceViews: AudienceView[]) => {
+      if (!actor) throw new Error('Actor not available');
+
+      const serializedViews = JSON.stringify(audienceViews);
+
+      try {
+        await actor.updateProject(AUDIENCE_PROJECT_TITLE, serializedViews);
+      } catch {
+        await actor.addProject(AUDIENCE_PROJECT_TITLE, serializedViews);
+      }
+
+      return audienceViews;
+    },
+    onSuccess: (audienceViews) => {
+      queryClient.setQueryData(['audienceViews'], audienceViews);
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['hasUnsavedChanges'] });
+      queryClient.invalidateQueries({ queryKey: ['revisionHistory'] });
+    },
+    onError: (error) => {
+      console.error('Failed to save audience views:', error);
+      queryClient.invalidateQueries({ queryKey: ['audienceViews'] });
+    },
   });
 }
 
@@ -681,7 +783,10 @@ export function useAddProject() {
       const uniqueId = `project-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       
       const currentProjects = await actor.getProjects();
-      const actualProjects = currentProjects.filter(([title]) => title !== CONTENT_PROJECT_TITLE);
+      const actualProjects = currentProjects.filter(
+        ([title]) =>
+          title !== CONTENT_PROJECT_TITLE && title !== AUDIENCE_PROJECT_TITLE,
+      );
       const nextOrder = actualProjects.length;
       
       const newProject: Project = {
@@ -900,14 +1005,14 @@ function getDefaultContent(): Record<string, ContentElement> {
     'hero-tagline': {
       id: 'hero-tagline',
       type: 'text',
-      value: 'Learning Experience Designer crafting engaging educational journeys that inspire and transform',
+      value: 'AI enablement architect, learning systems builder, and workflow automation partner.',
       section: 'hero',
       lastModified: now,
     },
     'hero-primary-button': {
       id: 'hero-primary-button',
       type: 'button',
-      value: 'View My Work',
+      value: 'View Case Studies',
       section: 'hero',
       lastModified: now,
     },
@@ -949,42 +1054,42 @@ function getDefaultContent(): Record<string, ContentElement> {
     'about-heading': {
       id: 'about-heading',
       type: 'text',
-      value: 'About Me',
+      value: 'What I Do',
       section: 'about',
       lastModified: now,
     },
     'about-subtitle': {
       id: 'about-subtitle',
       type: 'text',
-      value: 'Passionate about creating meaningful learning experiences that bridge the gap between knowledge and application',
+      value: 'I turn messy knowledge work into clear systems people can use, maintain, and scale.',
       section: 'about',
       lastModified: now,
     },
     'about-paragraph1': {
       id: 'about-paragraph1',
       type: 'text',
-      value: 'With over 8 years of experience in learning experience design, I specialize in creating innovative educational solutions that engage learners and drive measurable outcomes. My approach combines pedagogical expertise with cutting-edge technology to deliver transformative learning experiences.',
+      value: 'I sit where learning design, AI operations, compliance, and product thinking overlap. My work has supported federal, municipal, enterprise, sales, healthcare, and SaaS environments.',
       section: 'about',
       lastModified: now,
     },
     'about-paragraph2': {
       id: 'about-paragraph2',
       type: 'text',
-      value: 'I believe that great learning design starts with understanding the learner\'s journey, identifying pain points, and crafting solutions that are both effective and enjoyable. My work spans across corporate training, higher education, and digital learning platforms.',
+      value: 'Recent work includes AI-assisted content pipelines, Section 508/WCAG governance, custom workflow platforms, and Caffeine-built applications that move from idea to usable software quickly.',
       section: 'about',
       lastModified: now,
     },
     'about-mission-heading': {
       id: 'about-mission-heading',
       type: 'text',
-      value: 'My Mission',
+      value: 'Operating Mode',
       section: 'about',
       lastModified: now,
     },
     'about-mission-text': {
       id: 'about-mission-text',
       type: 'text',
-      value: 'To transform how people learn by designing experiences that are not just educational, but truly engaging and memorable. I strive to make learning accessible, enjoyable, and impactful for every learner.',
+      value: 'Keep the resume simple. Let the portfolio carry the proof. Tailor the story to the audience without burying the viewer in every detail.',
       section: 'about',
       lastModified: now,
     },
@@ -992,10 +1097,10 @@ function getDefaultContent(): Record<string, ContentElement> {
       id: 'about-values-list',
       type: 'list',
       value: JSON.stringify([
-        'Learner-centered design approach',
-        'Evidence-based instructional strategies',
-        'Continuous improvement mindset',
-        'Collaborative problem-solving'
+        'AI workflow automation and human-in-the-loop review',
+        'Learning systems, onboarding, and readiness architecture',
+        'Accessibility, governance, and audit-ready delivery',
+        'Rapid Caffeine/ICP app prototyping with editable portfolio pages'
       ]),
       section: 'about',
       lastModified: now,
@@ -1003,14 +1108,14 @@ function getDefaultContent(): Record<string, ContentElement> {
     'projects-heading': {
       id: 'projects-heading',
       type: 'text',
-      value: 'Featured Projects',
+      value: 'Selected Work',
       section: 'projects',
       lastModified: now,
     },
     'projects-subtitle': {
       id: 'projects-subtitle',
       type: 'text',
-      value: 'A showcase of learning experiences designed to engage, educate, and inspire',
+      value: 'A lean set of case studies: enough context to understand the work, with details one click deeper.',
       section: 'projects',
       lastModified: now,
     },
@@ -1024,7 +1129,7 @@ function getDefaultContent(): Record<string, ContentElement> {
     'contact-subtitle': {
       id: 'contact-subtitle',
       type: 'text',
-      value: 'Ready to create exceptional learning experiences together? I\'d love to hear about your goals',
+      value: 'Open to roles, consulting, and build partnerships where learning, AI, and operations need to become one usable system.',
       section: 'contact',
       lastModified: now,
     },
@@ -1052,7 +1157,7 @@ function getDefaultContent(): Record<string, ContentElement> {
     'contact-location': {
       id: 'contact-location',
       type: 'text',
-      value: 'Arlington, VA',
+      value: 'Leland, NC',
       section: 'contact',
       lastModified: now,
     },
@@ -1066,7 +1171,7 @@ function getDefaultContent(): Record<string, ContentElement> {
     'contact-help-heading': {
       id: 'contact-help-heading',
       type: 'text',
-      value: 'What I Can Help With',
+      value: 'Useful Conversations',
       section: 'contact',
       lastModified: now,
     },
@@ -1074,15 +1179,154 @@ function getDefaultContent(): Record<string, ContentElement> {
       id: 'contact-help-list',
       type: 'list',
       value: JSON.stringify([
-        'Learning experience design and strategy',
-        'Curriculum development and assessment',
-        'Educational technology implementation',
-        'Learning analytics and optimization',
-        'Team training and workshops'
+        'AI enablement and workflow automation',
+        'Learning experience and onboarding architecture',
+        'Section 508/WCAG compliant production systems',
+        'Caffeine/ICP prototypes and portfolio-style product demos',
+        'ATS-simple resume plus richer tailored portfolio strategy'
       ]),
       section: 'contact',
       lastModified: now,
     }
+  };
+}
+
+function getDefaultProjects(): Project[] {
+  const now = Date.now();
+
+  return [
+    {
+      id: 'career-city',
+      title: 'Career City',
+      hoverDescription:
+        'A game-style career exploration experience built with Caffeine to make growth, reflection, and learning feel playable.',
+      detailedDescription:
+        '# Career City\n\n**Role:** product concept, learning experience architecture, AI-assisted build direction\n\nCareer City turns career development into a more visual, interactive journey. It is the kind of portfolio piece that can show learning strategy, product taste, and hands-on AI-enabled software creation in one place.\n\n## Why it matters\n\n* Makes career exploration feel less abstract and more navigable.\n* Shows how learning experience design can become an actual app, not just a course or slide deck.\n* Demonstrates rapid Caffeine/ICP product iteration with persistent state and visual experience design.\n\n## Repository\n\n[github.com/terrybrutus/career-city](https://github.com/terrybrutus/career-city)',
+      image: '/assets/project-card-example-1.png',
+      url: '',
+      tags: ['Caffeine', 'Learning Game', 'AI Build', 'Career Growth'],
+      order: 0,
+      lastModified: now,
+    },
+    {
+      id: 'ai-talent-pipeline',
+      title: 'AI Talent Content Pipeline',
+      hoverDescription:
+        'A human-in-the-loop AI workflow that reduced content processing from 1.5 hours to 9.5 minutes per deliverable.',
+      detailedDescription:
+        '# AI Talent Content Pipeline\n\n**Role:** senior talent development lead and AI enablement architect\n\nBuilt an AI-assisted content analysis and skills-alignment process across a 100+ asset pipeline using NotebookLM RAG, Python, VBA, and Claude Code.\n\n## Outcomes\n\n* Reduced per-deliverable processing time from 1.5 hours to 9.5 minutes.\n* Helped standardize the client process for future talent content production.\n* Supported a high-stakes defense acquisition workforce audience of roughly 158,000 people.\n\n## What this proves\n\nI can translate ambiguous content operations into repeatable systems: prompts, scripts, review loops, data structure, and delivery governance.',
+      image: '/assets/project-card-example-2.png',
+      url: '',
+      tags: ['AI Enablement', 'RAG', 'Python', 'VBA', 'Governance'],
+      order: 1,
+      lastModified: now,
+    },
+    {
+      id: 'work-portfolio-studio',
+      title: 'Living Portfolio Studio',
+      hoverDescription:
+        'The portfolio itself: editable case studies, image management, drag ordering, revision history, and admin-only updates.',
+      detailedDescription:
+        '# Living Portfolio Studio\n\n**Role:** product owner and AI-assisted builder\n\nThis site is designed to become a living portfolio rather than a static page. The public view stays simple, while the admin layer supports direct content edits, project ordering, image uploads, rich project pages, and revision history.\n\n## Direction\n\n* Keep the resume and LinkedIn minimal.\n* Let the portfolio hold deeper proof and visuals.\n* Build toward private, tailored portfolio views for specific companies or roles.\n\n## Repository\n\n[github.com/terrybrutus/work-pf](https://github.com/terrybrutus/work-pf)',
+      image: '/assets/generated/hero-banner.jpg',
+      url: '',
+      tags: ['Portfolio CMS', 'React', 'Motoko', 'ICP', 'Admin Editing'],
+      order: 2,
+      lastModified: now,
+    },
+    {
+      id: 'roundrobin-decision-engine',
+      title: 'Roundrobin Decision Engine',
+      hoverDescription:
+        'A Caffeine-built odds and matching tool that shows API diagnosis, data contracts, and practical product debugging.',
+      detailedDescription:
+        '# Roundrobin Decision Engine\n\n**Role:** AI-assisted product builder and systems debugger\n\nRoundrobin is useful as a portfolio item because it shows practical API work: event matching, raw data inspection, request-contract debugging, and product logic that has to explain empty states instead of hiding them.\n\n## Why it belongs here\n\n* Shows comfort with external APIs and data modeling.\n* Demonstrates debugging from visible product symptoms back to raw request contracts.\n* Fits the broader story: using AI tools to build operational products, not just content.\n\n## Repository\n\n[github.com/terrybrutus/Roundrobin](https://github.com/terrybrutus/Roundrobin)',
+      image: '/assets/generated/project-placeholder-1.jpg',
+      url: '',
+      tags: ['API Debugging', 'Caffeine', 'TypeScript', 'Product Logic'],
+      order: 3,
+      lastModified: now,
+    },
+    {
+      id: 'stylebook-workflow-system',
+      title: 'StyleBook Workflow System',
+      hoverDescription:
+        'A practical scheduling and style workflow app showing how personal operations can become polished tools.',
+      detailedDescription:
+        '# StyleBook Workflow System\n\n**Role:** product concept and AI-assisted application builder\n\nStyleBook is a strong supporting portfolio piece because it shows product thinking around everyday workflow: calendar interactions, saved preferences, mobile gestures, and a focused interface built for repeated use.\n\n## What this proves\n\n* Ability to turn a personal workflow into a usable product surface.\n* Attention to interaction details and mobile behavior.\n* Breadth beyond traditional learning deliverables.\n\n## Repository\n\n[github.com/terrybrutus/stylebook2](https://github.com/terrybrutus/stylebook2)',
+      image: '/assets/generated/project-placeholder-2.jpg',
+      url: '',
+      tags: ['Workflow Design', 'React', 'Mobile UX', 'Caffeine'],
+      order: 4,
+      lastModified: now,
+    },
+    {
+      id: 'stratedge-backtester',
+      title: 'StratEdge Backtester',
+      hoverDescription:
+        'A technical prototype for testing strategies, signals, and decision loops with clearer feedback.',
+      detailedDescription:
+        '# StratEdge Backtester\n\n**Role:** AI-assisted builder and product strategist\n\nStratEdge shows a different side of the portfolio: systems thinking applied to testing, feedback loops, and decision support.\n\n## Why it matters\n\n* Expands the story beyond learning and enablement into analytical product building.\n* Shows comfort with finance-adjacent workflows and experimentation tools.\n* Reinforces the theme of making complex decisions easier to inspect.\n\n## Repository\n\n[github.com/terrybrutus/Fxify-backtesting](https://github.com/terrybrutus/Fxify-backtesting)',
+      image: '/assets/generated/project-placeholder-3.jpg',
+      url: '',
+      tags: ['Backtesting', 'Decision Support', 'TypeScript', 'Caffeine'],
+      order: 5,
+      lastModified: now,
+    },
+  ];
+}
+
+function normalizeAudienceView(value: unknown): AudienceView | null {
+  if (!value || typeof value !== 'object') {
+    return null;
+  }
+
+  const source = value as Partial<AudienceView>;
+  const now = Date.now();
+  const status: AudienceStatus =
+    source.status === 'archived' || source.status === 'expired'
+      ? source.status
+      : 'active';
+
+  return {
+    id: typeof source.id === 'string' ? source.id : `audience-${now}`,
+    slug: typeof source.slug === 'string' ? source.slug : '',
+    label: typeof source.label === 'string' ? source.label : 'Untitled view',
+    companyName:
+      typeof source.companyName === 'string' ? source.companyName : '',
+    roleTitle: typeof source.roleTitle === 'string' ? source.roleTitle : '',
+    status,
+    expiresAt: typeof source.expiresAt === 'string' ? source.expiresAt : '',
+    jobDescription:
+      typeof source.jobDescription === 'string' ? source.jobDescription : '',
+    toneNotes: typeof source.toneNotes === 'string' ? source.toneNotes : '',
+    jargonNotes:
+      typeof source.jargonNotes === 'string' ? source.jargonNotes : '',
+    theme: {
+      primary:
+        typeof source.theme?.primary === 'string'
+          ? source.theme.primary
+          : '#42d3a5',
+      accent:
+        typeof source.theme?.accent === 'string'
+          ? source.theme.accent
+          : '#d8b25c',
+      background:
+        typeof source.theme?.background === 'string'
+          ? source.theme.background
+          : '#111827',
+    },
+    projectIds: Array.isArray(source.projectIds)
+      ? source.projectIds.filter((projectId) => typeof projectId === 'string')
+      : [],
+    contentOverrides:
+      source.contentOverrides && typeof source.contentOverrides === 'object'
+        ? source.contentOverrides
+        : {},
+    createdAt:
+      typeof source.createdAt === 'number' ? source.createdAt : now,
+    updatedAt:
+      typeof source.updatedAt === 'number' ? source.updatedAt : now,
   };
 }
 

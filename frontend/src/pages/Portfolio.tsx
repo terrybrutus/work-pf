@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useIsCallerAdmin, useContentElements, useUpdateContentElement, useProjects, useGlobalSave, useGlobalUndo, useGlobalRedo, useHasUnsavedChanges, useCanUndo, useCanRedo, useReorderProjects, useAutoSave } from '../hooks/useQueries';
+import { useIsCallerAdmin, useContentElements, useUpdateContentElement, useProjects, useGlobalSave, useGlobalUndo, useGlobalRedo, useHasUnsavedChanges, useCanUndo, useCanRedo, useReorderProjects, useAutoSave, useAudienceViews } from '../hooks/useQueries';
+import type { AudienceView, Project } from '../hooks/useQueries';
 import { useScrollToSection } from '../hooks/useScrollToSection';
 import { useAdminToggle } from '../hooks/useAdminToggle';
 import { toast } from 'sonner';
@@ -16,12 +17,14 @@ import ProjectsSection from '../components/sections/ProjectsSection';
 import ContactSection from '../components/sections/ContactSection';
 import RevisionHistory from '../components/RevisionHistory';
 import ProjectPage from '../components/pages/ProjectPage';
+import AudienceViewManager from '../components/AudienceViewManager';
 
 export default function Portfolio() {
   const { identity } = useInternetIdentity();
-  const { data: isAdmin = false, isLoading: isAdminLoading, isFetched: isAdminFetched } = useIsCallerAdmin();
+  const { data: isAdmin = false, isLoading: isAdminLoading } = useIsCallerAdmin();
   const { data: contentElements = {}, isLoading: contentLoading, error: contentError } = useContentElements();
   const { data: projects = [], isLoading: projectsLoading } = useProjects();
+  const { data: audienceViews = [], isLoading: audienceViewsLoading } = useAudienceViews();
   const updateContentElement = useUpdateContentElement();
   const reorderProjects = useReorderProjects();
   const autoSave = useAutoSave();
@@ -42,6 +45,7 @@ export default function Portfolio() {
   const { showAdminButtons, handleLogoInteraction } = useAdminToggle(isAuthenticated, isAdmin);
   
   const [showRevisionHistory, setShowRevisionHistory] = useState(false);
+  const [showAudienceManager, setShowAudienceManager] = useState(false);
   const [isWYSIWYGMode, setIsWYSIWYGMode] = useState(false);
   const [editingElement, setEditingElement] = useState<string | null>(null);
   const [lastSaveTime, setLastSaveTime] = useState<Date | null>(null);
@@ -50,6 +54,15 @@ export default function Portfolio() {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const canEdit = isAuthenticated && isAdmin && isWYSIWYGMode;
+  const audienceSlug = getAudienceSlugFromLocation();
+  const activeAudience = audienceSlug
+    ? audienceViews.find((audience) => audience.slug === audienceSlug) || null
+    : null;
+  const isAudienceView = Boolean(audienceSlug);
+  const isAudienceUnavailable =
+    isAudienceView && (!activeAudience || isAudienceExpired(activeAudience));
+  const visibleProjects = getAudienceProjects(projects, activeAudience);
+  const audienceStyle = getAudienceStyle(activeAudience);
 
   // Auto-save functionality for seamless data migration
   useEffect(() => {
@@ -137,7 +150,9 @@ export default function Portfolio() {
   };
 
   const getContentValue = (elementId: string, defaultValue: string = '') => {
-    return contentElements[elementId]?.value || defaultValue;
+    return activeAudience?.contentOverrides[elementId] ||
+      contentElements[elementId]?.value ||
+      defaultValue;
   };
 
   const getListItems = (elementId: string, defaultItems: string[] = []): string[] => {
@@ -168,7 +183,7 @@ export default function Portfolio() {
     toast.success(isWYSIWYGMode ? 'Edit mode disabled' : 'Edit mode enabled');
   };
 
-  const isLoading = contentLoading || projectsLoading || isAdminLoading;
+  const isLoading = contentLoading || projectsLoading || isAdminLoading || audienceViewsLoading;
   const hasError = contentError;
   
   if (hasError) {
@@ -177,6 +192,15 @@ export default function Portfolio() {
   
   if (isLoading) {
     return <LoadingSpinner />;
+  }
+
+  if (isAudienceUnavailable) {
+    return (
+      <ExpiredAudienceView
+        audienceSlug={audienceSlug || ''}
+        contactEmail={getContentValue('contact-email', 'terrbrutus@gmail.com')}
+      />
+    );
   }
 
   // Render project page if in project view
@@ -192,7 +216,10 @@ export default function Portfolio() {
   }
 
   return (
-    <div className={`min-h-screen bg-background relative transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+    <div
+      className={`min-h-screen bg-background relative transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+      style={audienceStyle}
+    >
       <ConstellationBackground />
 
       <Navigation
@@ -203,6 +230,7 @@ export default function Portfolio() {
         onLogoInteraction={handleLogoInteraction}
         onToggleWYSIWYGMode={toggleWYSIWYGMode}
         onShowRevisionHistory={() => setShowRevisionHistory(true)}
+        onManageAudienceViews={() => setShowAudienceManager(true)}
         onScrollToSection={scrollToSection}
         getContentValue={getContentValue}
         handleContentUpdate={handleContentUpdate}
@@ -211,6 +239,18 @@ export default function Portfolio() {
         onCancelEdit={cancelEdit}
         canEdit={canEdit}
       />
+
+      {activeAudience && (
+        <div className="relative z-20 mx-auto mt-36 max-w-4xl px-6">
+          <div
+            className="rounded-md border border-white/15 bg-card/80 p-3 text-center text-sm text-white shadow-lg backdrop-blur"
+            style={{ borderColor: activeAudience.theme.accent }}
+          >
+            Tailored portfolio view for {activeAudience.companyName || activeAudience.label}
+            {activeAudience.roleTitle ? ` - ${activeAudience.roleTitle}` : ''}
+          </div>
+        </div>
+      )}
 
       {isWYSIWYGMode && isAuthenticated && isAdmin && (
         <EditModeBar
@@ -249,7 +289,7 @@ export default function Portfolio() {
       />
 
       <ProjectsSection
-        projects={projects}
+        projects={visibleProjects}
         canEdit={canEdit}
         hasGlobalUnsavedChanges={hasUnsavedChanges}
         getContentValue={getContentValue}
@@ -278,6 +318,90 @@ export default function Portfolio() {
           onClose={() => setShowRevisionHistory(false)}
         />
       )}
+
+      {isAuthenticated && isAdmin && (
+        <AudienceViewManager
+          isOpen={showAudienceManager}
+          onClose={() => setShowAudienceManager(false)}
+          projects={projects}
+        />
+      )}
+    </div>
+  );
+}
+
+function getAudienceSlugFromLocation() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const pathMatch = window.location.pathname.match(/\/v\/([^/?#]+)/);
+  if (pathMatch?.[1]) {
+    return decodeURIComponent(pathMatch[1]);
+  }
+
+  return new URLSearchParams(window.location.search).get('v');
+}
+
+function getAudienceProjects(projects: Project[], audience: AudienceView | null) {
+  if (!audience || audience.projectIds.length === 0) {
+    return projects;
+  }
+
+  const projectById = new Map(projects.map((project) => [project.id, project]));
+  return audience.projectIds
+    .map((projectId) => projectById.get(projectId))
+    .filter((project): project is Project => Boolean(project));
+}
+
+function getAudienceStyle(audience: AudienceView | null): React.CSSProperties | undefined {
+  if (!audience) {
+    return undefined;
+  }
+
+  return {
+    backgroundColor: audience.theme.background,
+  };
+}
+
+function isAudienceExpired(audience: AudienceView) {
+  if (audience.status !== 'active') {
+    return true;
+  }
+
+  if (!audience.expiresAt) {
+    return false;
+  }
+
+  const expiresAt = new Date(`${audience.expiresAt}T23:59:59`);
+  return Number.isFinite(expiresAt.getTime()) && expiresAt < new Date();
+}
+
+function ExpiredAudienceView({
+  audienceSlug,
+  contactEmail,
+}: {
+  audienceSlug: string;
+  contactEmail: string;
+}) {
+  return (
+    <div className="min-h-screen bg-background relative flex items-center justify-center px-6">
+      <ConstellationBackground />
+      <div className="relative z-10 max-w-lg text-center">
+        <h1 className="mb-4 text-3xl font-bold text-white">
+          This portfolio view is no longer active.
+        </h1>
+        <p className="mb-6 text-white/80">
+          The private view for <span className="font-mono">{audienceSlug}</span> has
+          expired or been archived. Reach out and I can refresh the link.
+        </p>
+        <a
+          href={`mailto:${contactEmail}`}
+          className="inline-flex rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
+        >
+          Request a refreshed view
+        </a>
+      </div>
     </div>
   );
 }

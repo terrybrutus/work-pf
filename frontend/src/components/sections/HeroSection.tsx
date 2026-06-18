@@ -26,7 +26,7 @@ export default function HeroSection({
   canEdit
 }: HeroSectionProps) {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 z-10">
+    <section className="relative min-h-[86vh] flex items-center justify-center overflow-hidden pt-32 z-10">
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
         <AnimatedSection>
           <div className="mb-8">
@@ -81,6 +81,7 @@ export default function HeroSection({
               canEdit={canEdit}
             >
               <Button
+                type="button"
                 size="lg"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
@@ -97,6 +98,7 @@ export default function HeroSection({
               canEdit={canEdit}
             >
               <Button
+                type="button"
                 size="lg"
                 variant="outline"
               >

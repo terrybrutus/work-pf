@@ -20,13 +20,13 @@ export default function NameEntranceAnimation({ children, onComplete }: NameEntr
 
     // Start animation after a brief delay
     const startTimeout = setTimeout(() => {
-      // Animation duration is 2.5 seconds
+      // Keep the first impression calm and fast.
       const animationTimeout = setTimeout(() => {
         setAnimationComplete(true);
         sessionStorage.setItem('nameAnimationPlayed', 'true');
         hasPlayedRef.current = true;
         if (onComplete) onComplete();
-      }, 2500);
+      }, 900);
 
       return () => clearTimeout(animationTimeout);
     }, 100);
@@ -48,7 +48,7 @@ export default function NameEntranceAnimation({ children, onComplete }: NameEntr
           animationComplete ? 'opacity-100' : 'opacity-0'
         }`}
         style={{ 
-          animation: animationComplete ? 'none' : 'name-fly-in 2.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+          animation: animationComplete ? 'none' : 'page-fade-in 900ms ease-out forwards',
           transitionDelay: animationComplete ? '0ms' : '0ms'
         }}
       >

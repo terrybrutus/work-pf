@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Edit, History } from 'lucide-react';
+import { Edit, History, Link2 } from 'lucide-react';
 import { EditableButton } from '../editor/EditableButton';
 import LoginButton from '../LoginButton';
 
@@ -12,6 +12,7 @@ interface NavigationProps {
   onLogoInteraction: () => void;
   onToggleWYSIWYGMode: () => void;
   onShowRevisionHistory: () => void;
+  onManageAudienceViews: () => void;
   onScrollToSection: (sectionId: string) => void;
   getContentValue: (elementId: string, defaultValue?: string) => string;
   handleContentUpdate: (elementId: string, value: string) => void;
@@ -29,6 +30,7 @@ export default function Navigation({
   onLogoInteraction,
   onToggleWYSIWYGMode,
   onShowRevisionHistory,
+  onManageAudienceViews,
   onScrollToSection,
   getContentValue,
   handleContentUpdate,
@@ -62,6 +64,7 @@ export default function Navigation({
                 className="text-white/80 hover:text-white transition-colors"
               >
                 <button
+                  type="button"
                   onClick={() => onScrollToSection('about')}
                   className="text-white/80 hover:text-white transition-colors"
                 >
@@ -80,6 +83,7 @@ export default function Navigation({
                 className="text-white/80 hover:text-white transition-colors"
               >
                 <button
+                  type="button"
                   onClick={() => onScrollToSection('projects')}
                   className="text-white/80 hover:text-white transition-colors"
                 >
@@ -98,6 +102,7 @@ export default function Navigation({
                 className="text-white/80 hover:text-white transition-colors"
               >
                 <button
+                  type="button"
                   onClick={() => onScrollToSection('contact')}
                   className="text-white/80 hover:text-white transition-colors"
                 >
@@ -111,6 +116,7 @@ export default function Navigation({
                   {isAuthenticated && isAdmin && (
                     <>
                       <Button
+                        type="button"
                         onClick={onToggleWYSIWYGMode}
                         variant={isWYSIWYGMode ? "default" : "outline"}
                         size="sm"
@@ -120,6 +126,17 @@ export default function Navigation({
                         {isWYSIWYGMode ? 'Exit Edit' : 'Edit Page'}
                       </Button>
                       <Button
+                        type="button"
+                        onClick={onManageAudienceViews}
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-2"
+                      >
+                        <Link2 className="w-4 h-4" />
+                        Views
+                      </Button>
+                      <Button
+                        type="button"
                         onClick={onShowRevisionHistory}
                         variant="outline"
                         size="sm"
