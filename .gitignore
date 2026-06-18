@@ -1,4 +1,5 @@
 node_modules/
+.mops/
 dist/
 src/frontend/node_modules/
 src/frontend/dist/

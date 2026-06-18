@@ -4,4 +4,4 @@ version = "0.1.0"
 description = "Terry Brutus work portfolio backend"
 
 [dependencies]
-base = "0.16.1"
+base = "0.16.0"
