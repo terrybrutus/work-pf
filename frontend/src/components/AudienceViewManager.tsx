@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Archive, Copy, Eye, Link2, Plus, RotateCcw, Save, TimerOff } from 'lucide-react';
+import { Archive, Copy, Eye, Link2, Plus, RotateCcw, Save, TimerOff, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   useAudienceViews,
@@ -135,6 +135,22 @@ export default function AudienceViewManager({
     }
   };
 
+  const generateTailoredDraft = () => {
+    if (!selectedAudience) {
+      return;
+    }
+
+    const draft = buildTailoredDraft(selectedAudience, projects);
+    updateSelectedAudience({
+      ...draft,
+      contentOverrides: {
+        ...selectedAudience.contentOverrides,
+        ...draft.contentOverrides,
+      },
+    });
+    toast.success('Tailored draft generated');
+  };
+
   const toggleProject = (projectId: string) => {
     if (!selectedAudience) {
       return;
@@ -222,6 +238,15 @@ export default function AudienceViewManager({
                   >
                     <Copy className="h-4 w-4" />
                     Copy Link
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={generateTailoredDraft}
+                    className="gap-2"
+                  >
+                    <Wand2 className="h-4 w-4" />
+                    Generate Draft
                   </Button>
                   <Button
                     type="button"
@@ -579,4 +604,242 @@ function hasAudienceExpired(audience: AudienceView) {
 
   const expiresAt = new Date(`${audience.expiresAt}T23:59:59`);
   return Number.isFinite(expiresAt.getTime()) && expiresAt < new Date();
+}
+
+function buildTailoredDraft(
+  audience: AudienceView,
+  projects: Project[],
+): Pick<
+  AudienceView,
+  'contentOverrides' | 'jargonNotes' | 'projectIds' | 'theme' | 'toneNotes'
+> {
+  const signalText = [
+    audience.companyName,
+    audience.roleTitle,
+    audience.jobDescription,
+    audience.jargonNotes,
+    audience.toneNotes,
+  ]
+    .join(' ')
+    .toLowerCase();
+
+  const lane = detectAudienceLane(signalText);
+  const company = audience.companyName || 'your team';
+  const role = audience.roleTitle || 'this role';
+  const projectIds = selectProjectIdsForLane(lane, projects);
+
+  return {
+    contentOverrides: {
+      'hero-tagline': getHeroLineForLane(lane, company),
+      'projects-subtitle': getProjectIntroForLane(lane, role),
+      'contact-subtitle': getContactLineForLane(lane, company),
+    },
+    jargonNotes: getJargonNotesForLane(lane),
+    projectIds,
+    theme: getThemeForLane(lane),
+    toneNotes: getToneNotesForLane(lane, company),
+  };
+}
+
+function detectAudienceLane(signalText: string) {
+  if (hasAny(signalText, ['federal', 'government', 'defense', 'dod', '508', 'wcag', 'compliance'])) {
+    return 'federal';
+  }
+
+  if (hasAny(signalText, ['customer education', 'saas', 'onboarding', 'time to value', 'ttv', 'churn', 'enablement'])) {
+    return 'saas';
+  }
+
+  if (hasAny(signalText, ['ai', 'automation', 'agent', 'workflow', 'operations', 'process improvement'])) {
+    return 'ai-ops';
+  }
+
+  if (hasAny(signalText, ['instructional', 'learning', 'lxd', 'training', 'curriculum', 'talent', 'skills'])) {
+    return 'learning';
+  }
+
+  if (hasAny(signalText, ['product', 'ux', 'prototype', 'application', 'platform', 'builder'])) {
+    return 'product';
+  }
+
+  return 'general';
+}
+
+function selectProjectIdsForLane(lane: string, projects: Project[]) {
+  const preferredByLane: Record<string, string[]> = {
+    federal: [
+      'ai-talent-pipeline',
+      'work-portfolio-studio',
+      'career-city',
+      'roundrobin-decision-engine',
+    ],
+    saas: [
+      'ai-talent-pipeline',
+      'career-city',
+      'work-portfolio-studio',
+      'stylebook-workflow-system',
+    ],
+    'ai-ops': [
+      'ai-talent-pipeline',
+      'work-portfolio-studio',
+      'roundrobin-decision-engine',
+      'stratedge-backtester',
+    ],
+    learning: [
+      'career-city',
+      'ai-talent-pipeline',
+      'work-portfolio-studio',
+      'stylebook-workflow-system',
+    ],
+    product: [
+      'work-portfolio-studio',
+      'career-city',
+      'roundrobin-decision-engine',
+      'stylebook-workflow-system',
+    ],
+    general: DEFAULT_PROJECT_IDS,
+  };
+
+  const availableIds = new Set(projects.map((project) => project.id));
+  const selectedIds = (preferredByLane[lane] || DEFAULT_PROJECT_IDS).filter(
+    (projectId) => availableIds.has(projectId),
+  );
+
+  return selectedIds.length > 0 ? selectedIds : projects.slice(0, 3).map((project) => project.id);
+}
+
+function getHeroLineForLane(lane: string, company: string) {
+  const lines: Record<string, string> = {
+    federal:
+      `AI-enabled learning systems for compliant, high-stakes workforce readiness at ${company}.`,
+    saas:
+      `Customer education and enablement systems that shorten time-to-value for ${company}.`,
+    'ai-ops':
+      `AI workflow automation that turns messy operations into usable systems for ${company}.`,
+    learning:
+      `Learning experiences and AI-supported systems tailored to how ${company} builds capability.`,
+    product:
+      `Product-minded learning and workflow tools built around ${company}'s real user problems.`,
+    general:
+      `AI enablement, learning systems, and workflow tools tailored to ${company}.`,
+  };
+
+  return lines[lane] || lines.general;
+}
+
+function getProjectIntroForLane(lane: string, role: string) {
+  const intros: Record<string, string> = {
+    federal:
+      `Selected proof points for ${role}: governance, accessibility, AI-assisted production, and delivery at scale.`,
+    saas:
+      `Selected proof points for ${role}: onboarding, customer education, time-to-value, and scalable enablement systems.`,
+    'ai-ops':
+      `Selected proof points for ${role}: automation, diagnostics, workflow design, and human-in-the-loop AI delivery.`,
+    learning:
+      `Selected proof points for ${role}: learning architecture, career experience design, and measurable content operations.`,
+    product:
+      `Selected proof points for ${role}: product thinking, editable systems, interactive experiences, and practical prototypes.`,
+    general:
+      `Selected proof points for ${role}: enough context to see the match, with deeper details one click in.`,
+  };
+
+  return intros[lane] || intros.general;
+}
+
+function getContactLineForLane(lane: string, company: string) {
+  const lines: Record<string, string> = {
+    federal:
+      `If ${company} needs compliant learning systems that move faster without losing rigor, I would be glad to talk.`,
+    saas:
+      `If ${company} is improving enablement, onboarding, or customer education, I would be glad to compare notes.`,
+    'ai-ops':
+      `If ${company} is trying to make AI practical inside real workflows, I would be glad to talk through the operating model.`,
+    learning:
+      `If ${company} needs learning experiences that connect strategy, tools, and measurable outcomes, I would be glad to talk.`,
+    product:
+      `If ${company} needs someone who can shape the idea and build the working surface, I would be glad to compare notes.`,
+    general:
+      `If this tailored view maps to the work ahead at ${company}, I would be glad to talk.`,
+  };
+
+  return lines[lane] || lines.general;
+}
+
+function getJargonNotesForLane(lane: string) {
+  const notes: Record<string, string> = {
+    federal:
+      'Use their language: mission readiness, compliance, governance, accessibility, stakeholder alignment. Map to your proof: 158,000-person workforce, Section 508/WCAG execution, audit-ready content systems, AI-assisted production.',
+    saas:
+      'Use their language: onboarding, time-to-value, customer education, enablement, adoption, churn reduction. Map to your proof: workflow platforms, content systems, AI-assisted delivery, learning/product bridge.',
+    'ai-ops':
+      'Use their language: automation, process improvement, operating model, human-in-the-loop, quality control, scalable workflows. Map to your proof: RAG, Python, VBA, Claude Code, 1.5 hours to 9.5 minutes.',
+    learning:
+      'Use their language: learner journey, capability building, curriculum, assessment, skills, behavior change. Map to your proof: Career City, enterprise onboarding, Army LMS scale, AI content pipeline.',
+    product:
+      'Use their language: prototype, user experience, iteration, product surface, admin tooling, systems design. Map to your proof: Caffeine apps, editable portfolio studio, project pages, workflow systems.',
+    general:
+      'Use their language lightly, then anchor it in your proof: AI enablement, learning systems, workflow automation, accessibility, and product-minded delivery.',
+  };
+
+  return notes[lane] || notes.general;
+}
+
+function getToneNotesForLane(lane: string, company: string) {
+  const notes: Record<string, string> = {
+    federal:
+      `Tone for ${company}: clear, credible, controlled, low-hype. Keep the visuals restrained and proof-heavy.`,
+    saas:
+      `Tone for ${company}: crisp, outcome-oriented, customer-value focused. Emphasize speed, adoption, and scalable enablement.`,
+    'ai-ops':
+      `Tone for ${company}: practical AI, not buzzwords. Emphasize the workflow, review loop, and measurable lift.`,
+    learning:
+      `Tone for ${company}: human-centered but not fluffy. Emphasize experience design, capability, and working systems.`,
+    product:
+      `Tone for ${company}: product-minded, visual, iterative. Emphasize working prototypes and admin-editable systems.`,
+    general:
+      `Tone for ${company}: concise, tailored, proof-led. Let the case studies carry the detail.`,
+  };
+
+  return notes[lane] || notes.general;
+}
+
+function getThemeForLane(lane: string) {
+  const themes: Record<string, AudienceView['theme']> = {
+    federal: {
+      primary: '#75d6c3',
+      accent: '#c7b46b',
+      background: '#0f172a',
+    },
+    saas: {
+      primary: '#60a5fa',
+      accent: '#34d399',
+      background: '#111827',
+    },
+    'ai-ops': {
+      primary: '#42d3a5',
+      accent: '#d8b25c',
+      background: '#101820',
+    },
+    learning: {
+      primary: '#8bd3ff',
+      accent: '#f0c66a',
+      background: '#141827',
+    },
+    product: {
+      primary: '#a7f3d0',
+      accent: '#f9a8d4',
+      background: '#111827',
+    },
+    general: {
+      primary: '#42d3a5',
+      accent: '#d8b25c',
+      background: '#111827',
+    },
+  };
+
+  return themes[lane] || themes.general;
+}
+
+function hasAny(text: string, keywords: string[]) {
+  return keywords.some((keyword) => text.includes(keyword));
 }
