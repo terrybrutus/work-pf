@@ -1,3 +1,5 @@
+import Cycles "mo:base/ExperimentalCycles";
+import Nat "mo:base/Nat";
 import OrderedMap "mo:base/OrderedMap";
 import Text "mo:base/Text";
 import Iter "mo:base/Iter";
@@ -8,9 +10,8 @@ import Principal "mo:base/Principal";
 import Debug "mo:base/Debug";
 import List "mo:base/List";
 import Array "mo:base/Array";
-import Nat "mo:base/Nat";
 
-actor {
+actor Main {
   transient let textMap = OrderedMap.Make<Text>(Text.compare);
   transient let principalMap = OrderedMap.Make<Principal>(Principal.compare);
 
@@ -24,23 +25,6 @@ actor {
   let registry = Registry.new();
   let accessControlState = AccessControl.initState();
 
-  type _CaffeineStorageRefillInformation = {
-    proposed_top_up_amount : ?Nat;
-  };
-
-  type _CaffeineStorageRefillResult = {
-    success : ?Bool;
-    topped_up_amount : ?Nat;
-  };
-
-  type _CaffeineStorageCreateCertificateResult = {
-    method : Text;
-    blob_hash : Text;
-  };
-
-  var stats = textMap.put(textMap.empty<Text>(), "projects_completed", "75+ Projects Completed");
-  stats := textMap.put(stats, "learners_impacted", "100K+ Learners Impacted");
-
   public shared ({ caller }) func initializeAccessControl() : async () {
     AccessControl.initialize(accessControlState, caller);
   };
@@ -50,9 +34,6 @@ actor {
   };
 
   public shared ({ caller }) func assignCallerUserRole(user : Principal, role : AccessControl.UserRole) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Debug.trap("Unauthorized: Only admins can assign roles");
-    };
     AccessControl.assignRole(accessControlState, caller, user, role);
   };
 
@@ -171,40 +152,6 @@ actor {
     Registry.remove(registry, path);
   };
 
-  public shared ({ caller }) func _caffeineStorageRefillCashier(refillInformation : ?_CaffeineStorageRefillInformation) : async _CaffeineStorageRefillResult {
-    let cashier = await Registry.getCashierPrincipal();
-    if (cashier != caller) {
-      Debug.trap("Unauthorized access");
-    };
-    await Registry.refillCashier(registry, cashier, refillInformation);
-  };
-
-  public shared ({ caller }) func _caffeineStorageUpdateGatewayPrincipals() : async () {
-    await Registry.updateGatewayPrincipals(registry);
-  };
-
-  public query ({ caller }) func _caffeineStorageBlobsToDelete() : async [Text] {
-    if (not Registry.isAuthorized(registry, caller)) {
-      Debug.trap("Unauthorized access");
-    };
-    let deadBlobs = Registry.getBlobsToRemove(registry);
-    Array.subArray(deadBlobs, 0, Nat.min(10000, Array.size(deadBlobs)));
-  };
-
-  public shared ({ caller }) func _caffeineStorageConfirmBlobDeletion(blobs : [Text]) : async () {
-    if (not Registry.isAuthorized(registry, caller)) {
-      Debug.trap("Unauthorized access");
-    };
-    ignore Registry.clearBlobsRemoved(registry, blobs);
-  };
-
-  public shared ({ caller }) func _caffeineStorageCreateCertificate(blob_hash : Text) : async _CaffeineStorageCreateCertificateResult {
-    {
-      method = "upload";
-      blob_hash = blob_hash;
-    };
-  };
-
   public shared ({ caller }) func undo() : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Debug.trap("Unauthorized: Only admins can undo changes");
@@ -273,14 +220,140 @@ actor {
   };
 
   public query func getStats() : async [(Text, Text)] {
-    Iter.toArray(textMap.entries(stats));
+    [
+      ("projects_completed", "75+ Projects Completed"),
+      ("learners_impacted", "100K+ Learners Impacted"),
+    ];
   };
 
   public shared ({ caller }) func updateStat(key : Text, value : Text) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Debug.trap("Unauthorized: Only admins can update stats");
     };
-    stats := textMap.put(stats, key, value);
+    ignore key;
+    ignore value;
   };
 
+  type __CAFFEINE_STORAGE_RefillInformation = {
+    proposed_top_up_amount : ?Nat;
+  };
+
+  type __CAFFEINE_STORAGE_RefillResult = {
+    success : ?Bool;
+    topped_up_amount : ?Nat;
+  };
+
+  type _CaffeineStorageCreateCertificateResult = {
+    method : Text;
+    blob_hash : Text;
+  };
+
+  public shared (msg) func __CAFFEINE_STORAGE_refillCashier(
+    refill_information : ?__CAFFEINE_STORAGE_RefillInformation
+  ) : async __CAFFEINE_STORAGE_RefillResult {
+    let cashier = Principal.fromText("72ch2-fiaaa-aaaar-qbsvq-cai");
+
+    assert (cashier == msg.caller);
+
+    let current_balance = Cycles.balance();
+    let reserved_cycles : Nat = 400_000_000_000;
+
+    let current_free_cycles_count : Nat = Nat.sub(current_balance, reserved_cycles);
+
+    let cycles_to_send : Nat = switch (refill_information) {
+      case null { current_free_cycles_count };
+      case (?info) {
+        switch (info.proposed_top_up_amount) {
+          case null { current_free_cycles_count };
+          case (?proposed) { Nat.min(proposed, current_free_cycles_count) };
+        };
+      };
+    };
+
+    let target_canister = actor (Principal.toText(cashier)) : actor {
+      account_top_up_v1 : ({ account : Principal }) -> async ();
+    };
+
+    let current_principal = Principal.fromActor(Main);
+
+    await (with cycles = cycles_to_send) target_canister.account_top_up_v1({ account = current_principal });
+
+    return {
+      success = ?true;
+      topped_up_amount = ?cycles_to_send;
+    };
+  };
+
+  public shared (msg) func __CAFFEINE_STORAGE_blobsToRemove() : async [Text] {
+    await Registry.requireAuthorized(registry, msg.caller, "72ch2-fiaaa-aaaar-qbsvq-cai");
+    Registry.getBlobsToRemove(registry);
+  };
+
+  public shared (msg) func __CAFFEINE_STORAGE_blobsRemoved(hashes : [Text]) : async Nat {
+    await Registry.requireAuthorized(registry, msg.caller, "72ch2-fiaaa-aaaar-qbsvq-cai");
+    Registry.clearBlobsRemoved(registry, hashes);
+  };
+
+  public shared (msg) func __CAFFEINE_STORAGE_updateGatewayPrincipals() : async () {
+    await Registry.requireAuthorized(registry, msg.caller, "72ch2-fiaaa-aaaar-qbsvq-cai");
+    await Registry.updateGatewayPrincipals(registry, "72ch2-fiaaa-aaaar-qbsvq-cai");
+  };
+
+  public shared ({ caller }) func _caffeineStorageRefillCashier(
+    refillInformation : ?__CAFFEINE_STORAGE_RefillInformation
+  ) : async __CAFFEINE_STORAGE_RefillResult {
+    let cashier = Principal.fromText("72ch2-fiaaa-aaaar-qbsvq-cai");
+
+    assert (cashier == caller);
+
+    let current_balance = Cycles.balance();
+    let reserved_cycles : Nat = 400_000_000_000;
+
+    let current_free_cycles_count : Nat = Nat.sub(current_balance, reserved_cycles);
+
+    let cycles_to_send : Nat = switch (refillInformation) {
+      case null { current_free_cycles_count };
+      case (?info) {
+        switch (info.proposed_top_up_amount) {
+          case null { current_free_cycles_count };
+          case (?proposed) { Nat.min(proposed, current_free_cycles_count) };
+        };
+      };
+    };
+
+    let target_canister = actor (Principal.toText(cashier)) : actor {
+      account_top_up_v1 : ({ account : Principal }) -> async ();
+    };
+
+    let current_principal = Principal.fromActor(Main);
+
+    await (with cycles = cycles_to_send) target_canister.account_top_up_v1({ account = current_principal });
+
+    {
+      success = ?true;
+      topped_up_amount = ?cycles_to_send;
+    };
+  };
+
+  public shared ({ caller }) func _caffeineStorageUpdateGatewayPrincipals() : async () {
+    await Registry.requireAuthorized(registry, caller, "72ch2-fiaaa-aaaar-qbsvq-cai");
+    await Registry.updateGatewayPrincipals(registry, "72ch2-fiaaa-aaaar-qbsvq-cai");
+  };
+
+  public shared ({ caller }) func _caffeineStorageBlobsToDelete() : async [Text] {
+    await Registry.requireAuthorized(registry, caller, "72ch2-fiaaa-aaaar-qbsvq-cai");
+    Registry.getBlobsToRemove(registry);
+  };
+
+  public shared ({ caller }) func _caffeineStorageConfirmBlobDeletion(blobs : [Text]) : async () {
+    await Registry.requireAuthorized(registry, caller, "72ch2-fiaaa-aaaar-qbsvq-cai");
+    ignore Registry.clearBlobsRemoved(registry, blobs);
+  };
+
+  public shared func _caffeineStorageCreateCertificate(blob_hash : Text) : async _CaffeineStorageCreateCertificateResult {
+    {
+      method = "upload";
+      blob_hash = blob_hash;
+    };
+  };
 };
