@@ -1,5 +1,4 @@
 import OrderedMap "mo:base/OrderedMap";
-import BlobStorage "blob-storage/Mixin";
 import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import Time "mo:base/Time";
@@ -9,6 +8,7 @@ import Principal "mo:base/Principal";
 import Debug "mo:base/Debug";
 import List "mo:base/List";
 import Array "mo:base/Array";
+import Nat "mo:base/Nat";
 
 actor {
   transient let textMap = OrderedMap.Make<Text>(Text.compare);
@@ -23,6 +23,20 @@ actor {
 
   let registry = Registry.new();
   let accessControlState = AccessControl.initState();
+
+  type _CaffeineStorageRefillInformation = {
+    proposed_top_up_amount : ?Nat;
+  };
+
+  type _CaffeineStorageRefillResult = {
+    success : ?Bool;
+    topped_up_amount : ?Nat;
+  };
+
+  type _CaffeineStorageCreateCertificateResult = {
+    method : Text;
+    blob_hash : Text;
+  };
 
   var stats = textMap.put(textMap.empty<Text>(), "projects_completed", "75+ Projects Completed");
   stats := textMap.put(stats, "learners_impacted", "100K+ Learners Impacted");
@@ -157,6 +171,40 @@ actor {
     Registry.remove(registry, path);
   };
 
+  public shared ({ caller }) func _caffeineStorageRefillCashier(refillInformation : ?_CaffeineStorageRefillInformation) : async _CaffeineStorageRefillResult {
+    let cashier = await Registry.getCashierPrincipal();
+    if (cashier != caller) {
+      Debug.trap("Unauthorized access");
+    };
+    await Registry.refillCashier(registry, cashier, refillInformation);
+  };
+
+  public shared ({ caller }) func _caffeineStorageUpdateGatewayPrincipals() : async () {
+    await Registry.updateGatewayPrincipals(registry);
+  };
+
+  public query ({ caller }) func _caffeineStorageBlobsToDelete() : async [Text] {
+    if (not Registry.isAuthorized(registry, caller)) {
+      Debug.trap("Unauthorized access");
+    };
+    let deadBlobs = Registry.getBlobsToRemove(registry);
+    Array.subArray(deadBlobs, 0, Nat.min(10000, Array.size(deadBlobs)));
+  };
+
+  public shared ({ caller }) func _caffeineStorageConfirmBlobDeletion(blobs : [Text]) : async () {
+    if (not Registry.isAuthorized(registry, caller)) {
+      Debug.trap("Unauthorized access");
+    };
+    ignore Registry.clearBlobsRemoved(registry, blobs);
+  };
+
+  public shared ({ caller }) func _caffeineStorageCreateCertificate(blob_hash : Text) : async _CaffeineStorageCreateCertificateResult {
+    {
+      method = "upload";
+      blob_hash = blob_hash;
+    };
+  };
+
   public shared ({ caller }) func undo() : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Debug.trap("Unauthorized: Only admins can undo changes");
@@ -235,5 +283,4 @@ actor {
     stats := textMap.put(stats, key, value);
   };
 
-  include BlobStorage(registry);
 };
