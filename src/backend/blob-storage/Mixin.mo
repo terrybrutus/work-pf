@@ -8,20 +8,21 @@ import Registry "registry";
 import Prim "mo:prim";
 import Debug "mo:base/Debug";
 
+type _CaffeineStorageRefillInformation = {
+  proposed_top_up_amount : ?Nat;
+};
+
+type _CaffeineStorageRefillResult = {
+  success : ?Bool;
+  topped_up_amount : ?Nat;
+};
+
+type _CaffeineStorageCreateCertificateResult = {
+  method : Text;
+  blob_hash : Text;
+};
+
 mixin(storage : Registry.Registry) {
-  type _CaffeineStorageRefillInformation = {
-    proposed_top_up_amount : ?Nat;
-  };
-
-  type _CaffeineStorageRefillResult = {
-    success : ?Bool;
-    topped_up_amount : ?Nat;
-  };
-
-  type _CaffeineStorageCreateCertificateResult = {
-    method : Text;
-    blob_hash : Text;
-  };
 
   public shared ({ caller }) func _caffeineStorageRefillCashier(refillInformation : ?_CaffeineStorageRefillInformation) : async _CaffeineStorageRefillResult {
     let cashier = await Registry.getCashierPrincipal();
